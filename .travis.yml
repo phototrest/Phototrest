@@ -6,6 +6,9 @@ script: ./.travis-build.sh
 
 sudo: false
 
+before_install:
+  - chmod +x ./.travis-build.sh
+
 jdk:
   - oraclejdk8
   - openjdk8
