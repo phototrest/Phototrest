@@ -7,10 +7,11 @@
 
 <html>
     <head>
-        <title>Phototrest Example Signup User Page</title>
+        <title>Phototrest</title>
     </head>
 
     <body>
+        <h1>Phototrest Signup New User Page Example</h1>
         <form method="POST" action="user">
             Name: <input type="text" name="name" />
             <input type="submit" value="Add" />
