@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.uwaterloo.ece658.session;
+package edu.uwaterloo.ece658.service;
 
 import edu.uwaterloo.ece658.entity.User;
+import edu.uwaterloo.ece658.session.UserFacade;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -15,7 +16,7 @@ import javax.ejb.Stateless;
  * @author mier
  */
 @Stateless
-public class AccountFacade {
+public class AccountService {
 
     @EJB
     UserFacade userFacade;
@@ -46,6 +47,14 @@ public class AccountFacade {
         }
         // Use doesn't exist
         return false;
+    }
+
+    public User retrieveExistingUser(String userName) {
+        return retrieveExistingUser(userName, false);
+    }
+
+    public User retrieveExistingUser(String userName, boolean isAdmin) {
+        return userFacade.findUserByUserNameAndRole(userName, isAdmin);
     }
 
     public boolean signUpNewUser(String userName, String password, String email) {

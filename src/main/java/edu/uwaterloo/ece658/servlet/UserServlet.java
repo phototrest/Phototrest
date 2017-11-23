@@ -1,7 +1,7 @@
 package edu.uwaterloo.ece658.servlet;
 
 import edu.uwaterloo.ece658.entity.User;
-import edu.uwaterloo.ece658.session.AccountFacade;
+import edu.uwaterloo.ece658.service.AccountService;
 import edu.uwaterloo.ece658.session.UserFacade;
 import java.io.IOException;
 import javax.ejb.EJB;
@@ -17,7 +17,7 @@ public class UserServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     @EJB
-    AccountFacade accountFacade;
+    AccountService accountFacade;
 
     @Override
     protected void doGet(
