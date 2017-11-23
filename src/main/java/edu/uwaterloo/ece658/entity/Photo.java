@@ -24,35 +24,37 @@ import javax.persistence.Table;
  * @author mier
  */
 @Entity
-@Table(name="T_PHOTO")
+@Table(name = "T_PHOTO")
 public class Photo implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    
-    @Column(unique=true)
+
+    @Column(unique = true)
     private String s3Key;
-    
+
     private Integer size;
-    
+
     private Date uploadedTime;
-    
+
     private String md5;
-    
+
     private boolean isPrivate;
-    
-    @ManyToMany(mappedBy="uploadedPhotos")
+
+    @ManyToMany(mappedBy = "uploadedPhotos")
     private List<User> uploadedUsers = new ArrayList<>();
-    
+
     @ManyToMany
     @JoinTable(
-	name="T_TAG_PHOTO",
-			joinColumns={@JoinColumn(name="PHOTO_ID", referencedColumnName="ID")},
-			inverseJoinColumns={@JoinColumn(name="TAG_ID", referencedColumnName="ID")})
-    private List<Tag> tags = new ArrayList(); 
-    
+            name = "T_TAG_PHOTO",
+            joinColumns = {
+                @JoinColumn(name = "PHOTO_ID", referencedColumnName = "ID")},
+            inverseJoinColumns = {
+                @JoinColumn(name = "TAG_ID", referencedColumnName = "ID")})
+    private List<Tag> tags = new ArrayList();
+
     public Long getId() {
         return id;
     }
@@ -141,5 +143,5 @@ public class Photo implements Serializable {
     public String toString() {
         return "edu.uwaterloo.ece658.entity.Photo[ id=" + id + " ]";
     }
-    
+
 }
