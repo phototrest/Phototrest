@@ -12,10 +12,5 @@ else
 fi
 
 echo "------ Start Building ------"
-# Build 
+# Build
 (cd $ROOT/Phototrest && mvn clean package)
-
-echo "------ Start Deploying ------"
-git remote add heroku https://git.heroku.com/phototrest-beta.git
-# Deploy to Beta
-(HEROKU_API_KEY="a486fa4c-7347-4165-a851-e1db25bf3a57" mvn heroku:deploy-war)
