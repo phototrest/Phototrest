@@ -166,7 +166,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "edu.uwaterloo.ece658.entity.User[ id=" + id + " ]";
+        return "edu.uwaterloo.ece658.entity.User[ id=" + id + " username: " + userName + " " + " ]";
     }
     
 }

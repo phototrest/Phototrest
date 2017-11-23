@@ -32,10 +32,10 @@ public class UserFacade extends AbstractFacade<User> {
     }
 
     private User findUserByUserNameAndRole(String userName, boolean isAdmin) {
-        TypedQuery query = em.createQuery("from User u where u.userName=:arg1"
-                + "and u.isAdmin=:arg2", User.class);
+        TypedQuery query = em.createQuery("SELECT u FROM User u WHERE u.userName=:arg1"
+                + " and u.isAdmin=:arg2", User.class);
         query.setParameter("arg1", userName);
-        query.setParameter("arg2", isAdmin);
+        query.setParameter("arg2", isAdmin);    
         List<User> resultList = query.getResultList();
         // User either doesn't exist or only one user exist
         assert resultList.isEmpty() || resultList.size() == 1;
