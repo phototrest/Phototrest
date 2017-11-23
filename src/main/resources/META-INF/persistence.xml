@@ -3,7 +3,8 @@
   <persistence-unit name="PhototrestPU" transaction-type="JTA">
     <provider>com.objectdb.jpa.Provider</provider>
     <properties>
-      <property name="javax.persistence.jdbc.url" value="$objectdb/db/ece658"/>
+<!--      <property name="objectdb" value="/home/mier/Downloads/objectdb-2.7.2_0"/>-->
+      <property name="javax.persistence.jdbc.url" value="/db/ece658.odb"/>
       <property name="javax.persistence.jdbc.user" value="admin"/>
       <property name="javax.persistence.jdbc.password" value="admin"/>
     </properties>
