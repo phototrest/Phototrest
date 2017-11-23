@@ -28,14 +28,14 @@ public class Tag implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
-    
-    @Column(unique=true)
+
+    @Column(unique = true)
     private String name;
-    
-    @ManyToMany(mappedBy="subscribedTags")
+
+    @ManyToMany(mappedBy = "subscribedTags")
     protected List<User> suscribedUsers = new ArrayList<>();
 
-    @ManyToMany(mappedBy="tags")
+    @ManyToMany(mappedBy = "tags")
     protected List<Photo> photosUnderThisTag = new ArrayList<>();
 
     public Long getId() {
@@ -69,7 +69,7 @@ public class Tag implements Serializable {
     public void setPhotosUnderThisTag(List<Photo> photosUnderThisTag) {
         this.photosUnderThisTag = photosUnderThisTag;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -94,5 +94,5 @@ public class Tag implements Serializable {
     public String toString() {
         return "edu.uwaterloo.ece658.entity.Tag[ id=" + id + " ]";
     }
-    
+
 }

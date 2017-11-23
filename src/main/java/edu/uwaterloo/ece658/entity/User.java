@@ -27,40 +27,44 @@ import javax.persistence.Table;
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
-    
-    @Column(unique=true)
+
+    @Column(unique = true)
     private String userName;
-    
+
     private String password;
-    
+
     private String email;
-    
+
     private String fName;
-    
+
     private String lName;
-    
+
     private String gender;
-    
+
     private int age;
-    
+
     private boolean isAdmin;
-    
+
     @ManyToMany
     @JoinTable(
-	name="T_TAG_USER",
-			joinColumns={@JoinColumn(name="USER_ID", referencedColumnName="ID")},
-			inverseJoinColumns={@JoinColumn(name="TAG_ID", referencedColumnName="ID")})
+            name = "T_TAG_USER",
+            joinColumns = {
+                @JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
+            inverseJoinColumns = {
+                @JoinColumn(name = "TAG_ID", referencedColumnName = "ID")})
     private List<Tag> subscribedTags = new ArrayList<>();
 
     @ManyToMany
     @JoinTable(
-	name="T_PHOTO_UPLOADED_USER",
-			joinColumns={@JoinColumn(name="USER_ID", referencedColumnName="ID")},
-			inverseJoinColumns={@JoinColumn(name="PHOTO_ID", referencedColumnName="ID")})
+            name = "T_PHOTO_UPLOADED_USER",
+            joinColumns = {
+                @JoinColumn(name = "USER_ID", referencedColumnName = "ID")},
+            inverseJoinColumns = {
+                @JoinColumn(name = "PHOTO_ID", referencedColumnName = "ID")})
     private List<Photo> uploadedPhotos = new ArrayList<>();
 
     public Long getId() {
@@ -150,7 +154,7 @@ public class User implements Serializable {
     public void setIsAdmin(boolean isAdmin) {
         this.isAdmin = isAdmin;
     }
-    
+
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
@@ -168,5 +172,5 @@ public class User implements Serializable {
     public String toString() {
         return "edu.uwaterloo.ece658.entity.User[ id=" + id + " username: " + userName + " " + " ]";
     }
-    
+
 }
