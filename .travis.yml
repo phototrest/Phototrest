@@ -11,6 +11,3 @@ before_install:
 
 jdk:
   - oraclejdk8
-  
-services:
-  - mysql
