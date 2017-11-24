@@ -69,6 +69,10 @@ public class Tag implements Serializable {
     public void setPhotosUnderThisTag(List<Photo> photosUnderThisTag) {
         this.photosUnderThisTag = photosUnderThisTag;
     }
+    
+    public void addPhoto(Photo photo) {
+        this.photosUnderThisTag.add(photo);
+    }
 
     @Override
     public int hashCode() {
