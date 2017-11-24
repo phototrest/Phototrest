@@ -11,8 +11,10 @@ import edu.uwaterloo.ece658.entity.Photo;
 import edu.uwaterloo.ece658.entity.Tag;
 import edu.uwaterloo.ece658.session.PhotoFacade;
 import edu.uwaterloo.ece658.session.TagFacade;
+import edu.uwaterloo.ece658.session.UserFacade;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -23,6 +25,9 @@ import javax.ejb.Stateless;
  */
 @Stateless
 public class DataTransmissionService {
+
+    @EJB
+    private UserFacade userFacade;
 
     @EJB
     private SubscriptionService subscriptionService;
@@ -36,25 +41,33 @@ public class DataTransmissionService {
     @EJB
     private S3Util s3Util;
 
-    public URL upload(String s3Key) {
+    public URL getUploadURL(String s3Key) {
         URL uploadURL = s3Util.getS3Url(s3Key, HttpMethod.PUT);
         return uploadURL;
     }
     
-    public URL download(String S3key) {
+    public URL getDownloadURL(String S3key) {
         URL downloadURL = s3Util.getS3Url(S3key, HttpMethod.GET);
         return downloadURL;
     }
     
-    private Photo initializePhoto(String S3key, Integer size, boolean isPrivate, List<Tag> tags) {
+    private Photo initializePhoto(
+            String username,
+            String S3key,
+            String Md5,
+            Integer photoSize, 
+            Date uploadDate, 
+            boolean isPrivatePhoto, 
+            List<Tag> tags)
+    {
         Photo photo = new Photo();
-        photo.setIsPrivate(isPrivate);
-        //photo.setMd5();
+        photo.addUser(userFacade.find(username));
         photo.setS3Key(S3key);
-        photo.setSize(size);
+        photo.setMd5(Md5);
+        photo.setSize(photoSize);
+        photo.setUploadedTime(uploadDate);
+        photo.setIsPrivate(isPrivatePhoto);
         photo.setTags(tags);
-        //photo.setUploadedTime(uploadedTime);
-        //photo.setUploadedUsers(uploadedUsers);
         
         for (Tag tag : tags) {
             tag.addPhoto(photo);
@@ -77,11 +90,25 @@ public class DataTransmissionService {
         return tags;
     }
     
-    public boolean updateDatabase(String S3key, Integer size, boolean isPrivate, List<String> tagNames) {
+    public boolean updateDatabaseWithPhotoInformation(
+            String username, 
+            String S3key,
+            String Md5,
+            Integer photoSize, 
+            Date uploadDate,
+            boolean isPrivatePhoto,
+            List<String> tagNames)
+    {
         // store key in table with tags
-        // TODO: get user
         List<Tag> tags = initializeTags(tagNames);
-        Photo photo = initializePhoto(S3key, size, isPrivate, tags);
+        Photo photo = initializePhoto(
+                        username,
+                        S3key,
+                        Md5,
+                        photoSize,
+                        uploadDate,
+                        isPrivatePhoto,
+                        tags);
         
         photoFacade.create(photo);
         for (Tag tag : tags) {
@@ -95,16 +122,12 @@ public class DataTransmissionService {
     }
     
     public boolean deleteImage(String S3key) {
-        //delete key in table
         Photo photo = photoFacade.find(S3key);
         if (photo != null) {
             photoFacade.remove(photo);
-            
-        } else {
-            // cannot find photo
-            return false;
+            return s3Util.deleteImage(S3key);
         }
-        // delete image in s3
-        return s3Util.deleteImage(S3key);
+        
+        return false;
     }
 }

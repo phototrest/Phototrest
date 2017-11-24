@@ -94,6 +94,10 @@ public class Photo implements Serializable {
     public void setUploadedUsers(List<User> uploadedUsers) {
         this.uploadedUsers = uploadedUsers;
     }
+    
+    public void addUser(User user) {
+        this.uploadedUsers.add(user);
+    }
 
     public List<Tag> getTags() {
         return tags;
