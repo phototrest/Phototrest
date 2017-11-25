@@ -6,7 +6,6 @@
 package edu.uwaterloo.ece658.session;
 
 import edu.uwaterloo.ece658.entity.Photo;
-import edu.uwaterloo.ece658.entity.Tag;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
