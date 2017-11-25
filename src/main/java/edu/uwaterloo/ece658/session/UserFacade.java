@@ -7,7 +7,6 @@ package edu.uwaterloo.ece658.session;
 
 import edu.uwaterloo.ece658.entity.User;
 import java.util.List;
-import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -41,5 +40,17 @@ public class UserFacade extends AbstractFacade<User> {
         // User either doesn't exist or only one user exist
         assert resultList.isEmpty() || resultList.size() == 1;
         return resultList.isEmpty() ? null : resultList.get(0);
+    }
+
+    public User findUserByUserName(String userName) {
+        return findUserByUserNameAndRole(userName, false);
+    }
+
+    public boolean existUserWithRole(String userName, boolean isAdmin) {
+        return findUserByUserNameAndRole(userName, isAdmin) != null;
+    }
+
+    public boolean existUser(String userName) {
+        return existUserWithRole(userName, false);
     }
 }
