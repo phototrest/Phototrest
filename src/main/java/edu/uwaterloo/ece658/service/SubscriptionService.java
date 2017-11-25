@@ -9,7 +9,6 @@ import javax.ejb.Stateless;
 import edu.uwaterloo.ece658.entity.Photo;
 import edu.uwaterloo.ece658.entity.Tag;
 import edu.uwaterloo.ece658.entity.User;
-import edu.uwaterloo.ece658.session.PhotoFacade;
 import edu.uwaterloo.ece658.session.TagFacade;
 import edu.uwaterloo.ece658.session.UserFacade;
 import java.util.List;
@@ -24,9 +23,6 @@ public class SubscriptionService {
 
     @EJB
     private TagFacade tagFacade;
-    
-    @EJB
-    private PhotoFacade photoFacade;
     
     @EJB
     private UserFacade userFacade;

@@ -5,14 +5,12 @@
  */
 package edu.uwaterloo.ece658.service;
 
-import com.amazonaws.HttpMethod;
 import edu.uwaterloo.ece658.entity.Photo;
 import edu.uwaterloo.ece658.entity.Tag;
 import edu.uwaterloo.ece658.entity.User;
 import edu.uwaterloo.ece658.session.PhotoFacade;
 import edu.uwaterloo.ece658.session.TagFacade;
 import edu.uwaterloo.ece658.session.UserFacade;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -116,10 +114,36 @@ public class DataHandlerService {
         return subscriptionService.notifyUsers(tags, photo);
     }
     
+    public void removeTagFromPhoto(String username, String S3key, String tagName) {
+        Photo photo = photoFacade.find(S3key);
+        User user = userFacade.find(username);
+        Tag tag = tagFacade.find(tagName);
+        
+        if (photo.getUploadedUsers().contains(user)) {
+            photo.getTags().remove(tag);
+            tag.getPhotosUnderThisTag().remove(photo);
+            tagFacade.edit(tag);
+            photoFacade.edit(photo);
+        }
+    }
+    
+    public void addTagToPhoto(String username, String S3key, String tagName) {
+        Photo photo = photoFacade.find(S3key);
+        User user = userFacade.find(username);
+        Tag tag = initializeTag(tagName);
+        
+        if (photo.getUploadedUsers().contains(user)) {
+            photo.addTag(tag);
+            tag.addPhoto(photo);
+            tagFacade.edit(tag);
+            photoFacade.edit(photo);
+        }
+    }
+    
     public boolean deleteImage(String username, String S3key) {
         Photo photo = photoFacade.find(S3key);
         User user = userFacade.find(username);
-        if (photo != null) {
+        if (photo != null && photo.getUploadedUsers().contains(user)) {
             user.getUploadedPhotos().remove(photo);
             userFacade.edit(user);
             for (Tag tag : photo.getTags()) {
