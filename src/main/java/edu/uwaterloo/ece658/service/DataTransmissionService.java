@@ -9,6 +9,7 @@ import edu.uwaterloo.ece658.util.S3Util;
 import com.amazonaws.HttpMethod;
 import edu.uwaterloo.ece658.entity.Photo;
 import edu.uwaterloo.ece658.entity.Tag;
+import edu.uwaterloo.ece658.entity.User;
 import edu.uwaterloo.ece658.session.PhotoFacade;
 import edu.uwaterloo.ece658.session.TagFacade;
 import edu.uwaterloo.ece658.session.UserFacade;
@@ -52,7 +53,7 @@ public class DataTransmissionService {
     }
     
     private Photo initializePhoto(
-            String username,
+            User user,
             String S3key,
             String Md5,
             Integer photoSize, 
@@ -60,24 +61,30 @@ public class DataTransmissionService {
             boolean isPrivatePhoto, 
             List<Tag> tags)
     {
-        Photo photo = new Photo();
-        photo.addUser(userFacade.find(username));
+        Photo photo = new Photo();        
         photo.setS3Key(S3key);
         photo.setMd5(Md5);
         photo.setSize(photoSize);
         photo.setUploadedTime(uploadDate);
         photo.setIsPrivate(isPrivatePhoto);
         photo.setTags(tags);
-        
-        for (Tag tag : tags) {
-            tag.addPhoto(photo);
-        }
+        photo.addUser(user);
+        photoFacade.create(photo);
         return photo;
     }
     
-    private Tag initializeTag(String tagName) {
+    private Tag createNewTag(String tagName) {
         Tag tag = new Tag();
         tag.setName(tagName);
+        tagFacade.create(tag);
+        return tag;
+    }
+    
+    private Tag initializeTag(String tagName) {
+        Tag tag = tagFacade.find(tagName);
+        if (tag == null) {
+            tag = createNewTag(tagName);
+        }
         return tag;
     }
     
@@ -101,8 +108,9 @@ public class DataTransmissionService {
     {
         // store key in table with tags
         List<Tag> tags = initializeTags(tagNames);
+        User user = userFacade.find(username);
         Photo photo = initializePhoto(
-                        username,
+                        user,
                         S3key,
                         Md5,
                         photoSize,
@@ -110,15 +118,16 @@ public class DataTransmissionService {
                         isPrivatePhoto,
                         tags);
         
-        photoFacade.create(photo);
+        user.addUploadedPhoto(photo);
+        userFacade.edit(user);
+        
         for (Tag tag : tags) {
-            tagFacade.create(tag);
+            tag.addPhoto(photo);
+            tagFacade.edit(tag);
         }
         
         // call notify to send messages to users
-        subscriptionService.notifyUsers(tags, photo);
-        
-        return true;
+        return subscriptionService.notifyUsers(tags, photo);
     }
     
     public boolean deleteImage(String S3key) {
