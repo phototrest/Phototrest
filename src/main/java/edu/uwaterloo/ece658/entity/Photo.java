@@ -106,6 +106,10 @@ public class Photo implements Serializable {
     public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
+    
+    public void addTag(Tag tag) {
+        this.tags.add(tag);
+    }
 
     public String getMd5() {
         return md5;
