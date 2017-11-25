@@ -24,7 +24,7 @@ import javax.ejb.Stateless;
  * @author Daniel
  */
 @Stateless
-public class DataTransmissionService {
+public class DataHandlerService {
 
     @EJB
     private UserFacade userFacade;
