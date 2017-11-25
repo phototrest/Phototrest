@@ -6,12 +6,14 @@
 package edu.uwaterloo.ece658.service;
 
 import javax.ejb.Stateless;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import edu.uwaterloo.ece658.entity.Photo;
 import edu.uwaterloo.ece658.entity.Tag;
 import edu.uwaterloo.ece658.entity.User;
+import edu.uwaterloo.ece658.session.PhotoFacade;
+import edu.uwaterloo.ece658.session.TagFacade;
+import edu.uwaterloo.ece658.session.UserFacade;
 import java.util.List;
+import javax.ejb.EJB;
 
 /**
  *
@@ -20,42 +22,64 @@ import java.util.List;
 @Stateless
 public class SubscriptionService {
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
- 
-    /*public boolean createNewTag(String tag) {
-        // creates a new tag entry into the data base and new entitiy class?
-        return false;
-    }
-    public boolean subscribeToTag(String tag) {
-        // check if tag exists
-        // if not then createNewTag(tag);
+    @EJB
+    private TagFacade tagFacade;
+    
+    @EJB
+    private PhotoFacade photoFacade;
+    
+    @EJB
+    private UserFacade userFacade;
+    
+    public boolean subscribeToTag(String username, String tagName) {
+        Tag tag = tagFacade.find(tagName);
         
-        // add tag to user's subscriptions in database
+        User user = userFacade.find(username);
+        user.addSubscribedTag(tag);
+        tag.addSubscribedUser(user);
+        
+        tagFacade.edit(tag);
+        userFacade.edit(user);
+        
         return false;
     }
 
-    public boolean unsubscribeFromTag(String tag) {
+    public boolean unsubscribeFromTag(String username, String tagName) {
         // remove tag from user's subscriptions in database
+        Tag tag = tagFacade.find(tagName);
+        User user = userFacade.find(username);
+        
+        tag.getSubscribedUsers().remove(user);
+        user.getSubscribedTags().remove(tag);
+        
+        tagFacade.edit(tag);
+        userFacade.edit(user);
+        
         return false;
-    }*/
+    }
     
-    private void sendNotification(User user, Photo photo) {
+    private boolean sendNotification(User user, Photo photo) {
         // TODO: send notification? 
+        return true;
     }
     
-    private void notify(List<User> users, Photo photo) {
+    private boolean notify(List<User> users, Photo photo) {
         for (User user : users) {
-            sendNotification(user, photo);
+            if (!sendNotification(user, photo)) {
+                return false;
+            }
         }
+        return true;
     }
     
-    public String notifyUsers(List<Tag> tags, Photo photo) {
+    public boolean notifyUsers(List<Tag> tags, Photo photo) {
         // iterate through list of users in each tag and send notification
         for (Tag tag : tags) {
-            notify(tag.getSuscribedUsers(), photo);
+            if (!notify(tag.getSubscribedUsers(), photo)) {
+                return false;
+            }
         }
-        return null;
+        return true;
     }
     
     
