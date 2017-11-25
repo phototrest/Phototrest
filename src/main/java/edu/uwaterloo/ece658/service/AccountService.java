@@ -93,8 +93,8 @@ public class AccountService {
     }
 
     /*=======================================================================*/
- /*Demo Only Purpose methods. Should never be called. Call corresponding
-    methods in UserFacader instead.*/
+    //Demo Only Purpose methods. Should never be called. Call corresponding
+    // methods in UserFacade instead.
     // This method is only needed in {@link UserServlet} for example purpose.
     // But not needed in ordinary account related tasks. Will be removed.
     @Deprecated
