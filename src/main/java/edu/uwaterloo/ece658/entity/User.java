@@ -138,6 +138,10 @@ public class User implements Serializable {
     public void setSubscribedTags(List<Tag> subscribedTags) {
         this.subscribedTags = subscribedTags;
     }
+    
+    public void addSubscribedTag(Tag tag){
+        this.subscribedTags.add(tag);
+    }
 
     public List<Photo> getUploadedPhotos() {
         return uploadedPhotos;
@@ -145,6 +149,10 @@ public class User implements Serializable {
 
     public void setUploadedPhotos(List<Photo> uploadedPhotos) {
         this.uploadedPhotos = uploadedPhotos;
+    }
+    
+    public void addUploadedPhoto(Photo photo) {
+        this.uploadedPhotos.add(photo);
     }
 
     public boolean isIsAdmin() {
