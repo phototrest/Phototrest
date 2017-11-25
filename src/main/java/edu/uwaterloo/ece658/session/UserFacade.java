@@ -42,4 +42,16 @@ public class UserFacade extends AbstractFacade<User> {
         assert resultList.isEmpty() || resultList.size() == 1;
         return resultList.isEmpty() ? null : resultList.get(0);
     }
+
+    public User findUserByUserName(String userName) {
+        return findUserByUserNameAndRole(userName, false);
+    }
+
+    public boolean existUserWithRole(String userName, boolean isAdmin) {
+        return findUserByUserNameAndRole(userName, isAdmin) != null;
+    }
+
+    public boolean existUser(String userName) {
+        return existUserWithRole(userName, false);
+    }
 }

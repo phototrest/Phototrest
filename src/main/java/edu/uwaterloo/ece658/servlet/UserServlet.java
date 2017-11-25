@@ -17,7 +17,7 @@ public class UserServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     @EJB
-    AccountService accountFacade;
+    AccountService accountService;
 
     @Override
     protected void doGet(
@@ -25,7 +25,7 @@ public class UserServlet extends HttpServlet {
             throws ServletException, IOException {
 
         // Display the list of users:
-        request.setAttribute("users", accountFacade.getAllUsers());
+        request.setAttribute("users", accountService.getAllUsers());
         request.getRequestDispatcher("/user.jsp").forward(request, response);
     }
 
@@ -37,12 +37,12 @@ public class UserServlet extends HttpServlet {
         // Handle a new guest:
         String name = request.getParameter("name");
         if (name != null) {
-            if (accountFacade.exist(name)) {
+            if (accountService.exist(name)) {
 
             } else {
                 User user = new User();
                 user.setUserName(name);
-                accountFacade.signUpNewUser(name, "", "");
+                accountService.signUpNewUser(name, "", "");
             }
         }
 
