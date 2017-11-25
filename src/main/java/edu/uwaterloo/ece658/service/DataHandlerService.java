@@ -64,7 +64,7 @@ public class DataHandlerService {
     }
     
     private Tag initializeTag(String tagName) {
-        Tag tag = tagFacade.find(tagName);
+        Tag tag = tagFacade.getNormalTagByName(tagName);
         if (tag == null) {
             tag = createNewTag(tagName);
         }
@@ -91,7 +91,7 @@ public class DataHandlerService {
     {
         // store key in table with tags
         List<Tag> tags = initializeTags(tagNames);
-        User user = userFacade.find(username);
+        User user = userFacade.findUserByUserName(username);
         Photo photo = initializePhoto(
                         S3key,
                         Md5,
@@ -115,9 +115,9 @@ public class DataHandlerService {
     }
     
     public void removeTagFromPhoto(String username, String S3key, String tagName) {
-        Photo photo = photoFacade.find(S3key);
-        User user = userFacade.find(username);
-        Tag tag = tagFacade.find(tagName);
+        Photo photo = photoFacade.getPhotoByS3Key(S3key);
+        User user = userFacade.findUserByUserName(username);
+        Tag tag = tagFacade.getNormalTagByName(tagName);
         
         if (photo.getUploadedUsers().contains(user)) {
             photo.getTags().remove(tag);
@@ -128,8 +128,8 @@ public class DataHandlerService {
     }
     
     public void addTagToPhoto(String username, String S3key, String tagName) {
-        Photo photo = photoFacade.find(S3key);
-        User user = userFacade.find(username);
+        Photo photo = photoFacade.getPhotoByS3Key(S3key);
+        User user = userFacade.findUserByUserName(username);
         Tag tag = initializeTag(tagName);
         
         if (photo.getUploadedUsers().contains(user)) {
@@ -141,8 +141,8 @@ public class DataHandlerService {
     }
     
     public boolean deleteImage(String username, String S3key) {
-        Photo photo = photoFacade.find(S3key);
-        User user = userFacade.find(username);
+        Photo photo = photoFacade.getPhotoByS3Key(S3key);
+        User user = userFacade.findUserByUserName(username);
         if (photo != null && photo.getUploadedUsers().contains(user)) {
             user.getUploadedPhotos().remove(photo);
             userFacade.edit(user);

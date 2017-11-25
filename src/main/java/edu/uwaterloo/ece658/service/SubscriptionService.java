@@ -28,9 +28,9 @@ public class SubscriptionService {
     private UserFacade userFacade;
     
     public boolean subscribeToTag(String username, String tagName) {
-        Tag tag = tagFacade.find(tagName);
+        Tag tag = tagFacade.getNormalTagByName(tagName);
         
-        User user = userFacade.find(username);
+        User user = userFacade.findUserByUserName(username);
         user.addSubscribedTag(tag);
         tag.addSubscribedUser(user);
         
@@ -42,8 +42,8 @@ public class SubscriptionService {
 
     public boolean unsubscribeFromTag(String username, String tagName) {
         // remove tag from user's subscriptions in database
-        Tag tag = tagFacade.find(tagName);
-        User user = userFacade.find(username);
+        Tag tag = tagFacade.getNormalTagByName(tagName);
+        User user = userFacade.findUserByUserName(username);
         
         tag.getSubscribedUsers().remove(user);
         user.getSubscribedTags().remove(tag);
