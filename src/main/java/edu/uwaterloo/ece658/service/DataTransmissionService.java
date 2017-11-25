@@ -130,10 +130,18 @@ public class DataTransmissionService {
         return subscriptionService.notifyUsers(tags, photo);
     }
     
-    public boolean deleteImage(String S3key) {
+    public boolean deleteImage(String username, String S3key) {
         Photo photo = photoFacade.find(S3key);
+        User user = userFacade.find(username);
         if (photo != null) {
+            user.getUploadedPhotos().remove(photo);
+            userFacade.edit(user);
+            for (Tag tag : photo.getTags()) {
+                tag.getPhotosUnderThisTag().remove(photo);
+                tagFacade.edit(tag);
+            }
             photoFacade.remove(photo);
+            
             return s3Util.deleteImage(S3key);
         }
         
