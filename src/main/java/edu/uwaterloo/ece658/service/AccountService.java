@@ -12,6 +12,11 @@ import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
 /**
+ * Service that handles business logic regarding accounts.
+ *
+ * This class is used in login check, signing up new users, resetting passwords,
+ * and updating user's additional information, e.g. gender, age, first name and
+ * last name etc.
  *
  * @author mier
  */
@@ -20,18 +25,6 @@ public class AccountService {
 
     @EJB
     UserFacade userFacade;
-
-    public List<User> getAllUsers() {
-        return userFacade.findAll();
-    }
-
-    public boolean exist(String userName) {
-        return exist(userName, false);
-    }
-
-    public boolean exist(String userName, boolean isAdmin) {
-        return userFacade.findUserByUserNameAndRole(userName, isAdmin) != null;
-    }
 
     public boolean checkUserCredentials(
             String userName, String password) {
@@ -49,21 +42,17 @@ public class AccountService {
         return false;
     }
 
-    public User retrieveExistingUser(String userName) {
-        return retrieveExistingUser(userName, false);
-    }
-
-    public User retrieveExistingUser(String userName, boolean isAdmin) {
-        return userFacade.findUserByUserNameAndRole(userName, isAdmin);
-    }
-
     public boolean signUpNewUser(String userName, String password, String email) {
         return signUpNewUser(userName, password, email, false);
     }
 
     public boolean signUpNewUser(
             String userName, String password, String email, boolean isAdmin) {
-        assert !exist(userName, isAdmin);
+        // Make sure user doesn't exist in the database
+        assert !userFacade.existUserWithRole(userName, isAdmin);
+        if (userName == null || userName.length() == 0) {
+            return false;
+        }
         User newUser = new User();
         // All mandatory fields to construct a User
         newUser.setUserName(userName);
@@ -80,7 +69,7 @@ public class AccountService {
 
     public void resetPassword(
             String userName, String password, boolean isAdmin) {
-        assert exist(userName, isAdmin);
+        assert userFacade.existUserWithRole(userName, isAdmin);
         User user = userFacade.findUserByUserNameAndRole(userName, isAdmin);
         user.setPassword(password);
         userFacade.edit(user);
@@ -94,7 +83,7 @@ public class AccountService {
 
     public void updateAdditionalInformation(String userName, boolean isAdmin,
             String newFName, String newLName, String newGender, int newAge) {
-        assert exist(userName, isAdmin);
+        assert userFacade.existUserWithRole(userName, isAdmin);
         User user = userFacade.findUserByUserNameAndRole(userName, isAdmin);
         user.setfName(newFName);
         user.setlName(newLName);
@@ -102,4 +91,29 @@ public class AccountService {
         user.setAge(newAge);
         userFacade.edit(user);
     }
+
+    /*=======================================================================*/
+ /*Demo Only Purpose methods. Should never be called. Call corresponding
+    methods in UserFacader instead.*/
+    // This method is only needed in {@link UserServlet} for example purpose.
+    // But not needed in ordinary account related tasks. Will be removed.
+    @Deprecated
+    public List<User> getAllUsers() {
+        return userFacade.findAll();
+    }
+
+    // This method is only needed in {@link UserServlet} for example purpose.
+    // But not needed in ordinary account related tasks. Will be removed.
+    @Deprecated
+    public boolean exist(String userName) {
+        return exist(userName, false);
+    }
+
+    // This method is only needed in {@link UserServlet} for example purpose.
+    // But not needed in ordinary account related tasks. Will be removed.
+    @Deprecated
+    public boolean exist(String userName, boolean isAdmin) {
+        return userFacade.findUserByUserNameAndRole(userName, isAdmin) != null;
+    }
+    /*=======================================================================*/
 }
