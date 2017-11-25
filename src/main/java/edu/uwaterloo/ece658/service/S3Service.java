@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.uwaterloo.ece658.util;
+package edu.uwaterloo.ece658.service;
 import java.net.URL;
 
 import javax.ejb.Stateless;
@@ -22,12 +22,22 @@ import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
  * @author Daniel
  */
 @Stateless
-public class S3Util {
+public class S3Service {
 
     // TODO: assign IAM to each user for S3 access
     final private String accessKey = "AKIAI3V5NZVUSNCMDN7Q";
     final private String secretKey = "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";
     final private String bucketName = "phototrest";
+    
+    public URL getUploadURL(String s3Key) {
+        URL uploadURL = getS3Url(s3Key, HttpMethod.PUT);
+        return uploadURL;
+    }
+    
+    public URL getDownloadURL(String S3key) {
+        URL downloadURL = getS3Url(S3key, HttpMethod.GET);
+        return downloadURL;
+    }
     
     /**
      * Returns the URL for a specified key. Specify method for upload or download
@@ -35,7 +45,7 @@ public class S3Util {
      * @param method (PUT = upload, GET = download)
      * @return 
      */
-    public URL getS3Url(String objectKey, HttpMethod method) {
+    private URL getS3Url(String objectKey, HttpMethod method) {
         BasicAWSCredentials creds =
                 new BasicAWSCredentials(accessKey, secretKey);
         

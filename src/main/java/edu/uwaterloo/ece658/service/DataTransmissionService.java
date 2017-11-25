@@ -5,7 +5,6 @@
  */
 package edu.uwaterloo.ece658.service;
 
-import edu.uwaterloo.ece658.util.S3Util;
 import com.amazonaws.HttpMethod;
 import edu.uwaterloo.ece658.entity.Photo;
 import edu.uwaterloo.ece658.entity.Tag;
@@ -40,26 +39,14 @@ public class DataTransmissionService {
     private TagFacade tagFacade;
 
     @EJB
-    private S3Util s3Util;
-
-    public URL getUploadURL(String s3Key) {
-        URL uploadURL = s3Util.getS3Url(s3Key, HttpMethod.PUT);
-        return uploadURL;
-    }
-    
-    public URL getDownloadURL(String S3key) {
-        URL downloadURL = s3Util.getS3Url(S3key, HttpMethod.GET);
-        return downloadURL;
-    }
+    private S3Service s3Util;
     
     private Photo initializePhoto(
-            User user,
             String S3key,
             String Md5,
             Integer photoSize, 
             Date uploadDate, 
-            boolean isPrivatePhoto, 
-            List<Tag> tags)
+            boolean isPrivatePhoto)
     {
         Photo photo = new Photo();        
         photo.setS3Key(S3key);
@@ -67,8 +54,6 @@ public class DataTransmissionService {
         photo.setSize(photoSize);
         photo.setUploadedTime(uploadDate);
         photo.setIsPrivate(isPrivatePhoto);
-        photo.setTags(tags);
-        photo.addUser(user);
         photoFacade.create(photo);
         return photo;
     }
@@ -110,13 +95,14 @@ public class DataTransmissionService {
         List<Tag> tags = initializeTags(tagNames);
         User user = userFacade.find(username);
         Photo photo = initializePhoto(
-                        user,
                         S3key,
                         Md5,
                         photoSize,
                         uploadDate,
-                        isPrivatePhoto,
-                        tags);
+                        isPrivatePhoto);
+        
+        photo.setTags(tags);
+        photo.addUser(user);
         
         user.addUploadedPhoto(photo);
         userFacade.edit(user);
