@@ -59,7 +59,7 @@ public class SubscriptionService {
         return true;
     }
     
-    private boolean notify(List<User> users, Photo photo) {
+    private boolean notifyUsers(List<User> users, Photo photo) {
         for (User user : users) {
             if (!sendNotification(user, photo)) {
                 return false;
@@ -68,10 +68,10 @@ public class SubscriptionService {
         return true;
     }
     
-    public boolean notifyUsers(List<Tag> tags, Photo photo) {
+    public boolean notifyUsersBySubscribedTags(List<Tag> tags, Photo photo) {
         // iterate through list of users in each tag and send notification
         for (Tag tag : tags) {
-            if (!notify(tag.getSubscribedUsers(), photo)) {
+            if (!notifyUsers(tag.getSubscribedUsers(), photo)) {
                 return false;
             }
         }
