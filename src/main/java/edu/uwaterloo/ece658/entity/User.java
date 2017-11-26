@@ -32,9 +32,10 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String userName;
 
+    @Column(nullable = false)
     private String password;
 
     private String email;
@@ -47,7 +48,7 @@ public class User implements Serializable {
 
     private int age;
 
-    private boolean isAdmin;
+    private boolean isAdmin = false;
 
     @ManyToMany
     @JoinTable(

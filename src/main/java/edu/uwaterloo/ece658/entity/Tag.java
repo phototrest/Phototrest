@@ -29,7 +29,7 @@ public class Tag implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String name;
 
     @ManyToMany(mappedBy = "subscribedTags")

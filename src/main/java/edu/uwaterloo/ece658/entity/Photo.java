@@ -18,6 +18,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -32,16 +34,17 @@ public class Photo implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String s3Key;
 
     private Integer size;
 
+    @Temporal(TemporalType.TIMESTAMP)
     private Date uploadedTime;
 
     private String md5;
 
-    private boolean isPrivate;
+    private boolean isPrivate = false;
 
     @ManyToMany(mappedBy = "uploadedPhotos")
     private List<User> uploadedUsers = new ArrayList<>();
