@@ -24,7 +24,7 @@ import javax.ejb.Stateless;
 public class AccountService {
 
     @EJB
-    UserFacade userFacade;
+    private UserFacade userFacade;
 
     public boolean checkUserCredentials(
             String userName, String password) {
