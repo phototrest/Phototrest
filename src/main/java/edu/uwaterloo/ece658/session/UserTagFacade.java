@@ -24,7 +24,7 @@ public class UserTagFacade extends AbstractFacade<UserTag> {
     private EntityManager em;
 
     @EJB
-    UserFacade userFacade;
+    private UserFacade userFacade;
 
     @Override
     protected EntityManager getEntityManager() {
