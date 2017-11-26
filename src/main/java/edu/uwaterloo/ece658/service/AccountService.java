@@ -33,7 +33,7 @@ public class AccountService {
 
     public boolean checkUserCredentials(
             String userName, String password, boolean isAdminLogin) {
-        User user = userFacade.findUserByUserNameAndRole(userName, isAdminLogin);
+        User user = userFacade.retrieveUserByUserNameAndRole(userName, isAdminLogin);
         if (user != null) {
             // User exists, check password
             return user.getPassword().contentEquals(password);
@@ -70,7 +70,7 @@ public class AccountService {
     public void resetPassword(
             String userName, String password, boolean isAdmin) {
         assert userFacade.existUserWithRole(userName, isAdmin);
-        User user = userFacade.findUserByUserNameAndRole(userName, isAdmin);
+        User user = userFacade.retrieveUserByUserNameAndRole(userName, isAdmin);
         user.setPassword(password);
         userFacade.edit(user);
     }
@@ -84,7 +84,7 @@ public class AccountService {
     public void updateAdditionalInformation(String userName, boolean isAdmin,
             String newFName, String newLName, String newGender, int newAge) {
         assert userFacade.existUserWithRole(userName, isAdmin);
-        User user = userFacade.findUserByUserNameAndRole(userName, isAdmin);
+        User user = userFacade.retrieveUserByUserNameAndRole(userName, isAdmin);
         user.setfName(newFName);
         user.setlName(newLName);
         user.setGender(newGender);
@@ -113,7 +113,7 @@ public class AccountService {
     // But not needed in ordinary account related tasks. Will be removed.
     @Deprecated
     public boolean exist(String userName, boolean isAdmin) {
-        return userFacade.findUserByUserNameAndRole(userName, isAdmin) != null;
+        return userFacade.retrieveUserByUserNameAndRole(userName, isAdmin) != null;
     }
     /*=======================================================================*/
 }

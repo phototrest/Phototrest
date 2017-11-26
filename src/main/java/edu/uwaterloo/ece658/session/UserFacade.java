@@ -31,7 +31,7 @@ public class UserFacade extends AbstractFacade<User> {
         super(User.class);
     }
 
-    public User findUserByUserNameAndRole(String userName, boolean isAdmin) {
+    public User retrieveUserByUserNameAndRole(String userName, boolean isAdmin) {
         TypedQuery query = em.createQuery("SELECT u FROM User u WHERE u.userName=:arg1"
                 + " and u.isAdmin=:arg2", User.class);
         query.setParameter("arg1", userName);
@@ -42,12 +42,12 @@ public class UserFacade extends AbstractFacade<User> {
         return resultList.isEmpty() ? null : resultList.get(0);
     }
 
-    public User findUserByUserName(String userName) {
-        return findUserByUserNameAndRole(userName, false);
+    public User retrieveUserByUserName(String userName) {
+        return retrieveUserByUserNameAndRole(userName, false);
     }
 
     public boolean existUserWithRole(String userName, boolean isAdmin) {
-        return findUserByUserNameAndRole(userName, isAdmin) != null;
+        return retrieveUserByUserNameAndRole(userName, isAdmin) != null;
     }
 
     public boolean existUser(String userName) {
