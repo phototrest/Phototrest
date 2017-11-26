@@ -14,6 +14,7 @@ import edu.uwaterloo.ece658.session.UserTagFacade;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 
@@ -44,31 +45,34 @@ public class BrowseService {
     }
 
     /**
-     * Given a username, fetch all photos classified by the subscribed tags by
-     * this user.
+     * Given a username, fetch all publicly-available photos classified by the
+     * subscribed tags by this user.
      *
-     * @param userName user name whose uploaded photos are being fetched
-     * @return mapping between subscribed tag and photos under the tag of the
-     * user
+     * @param userName user name whose subscribed photos are being fetched
+     * @return mapping between subscribed tag and public photos under the tag
      */
-    public Map<Tag, List<Photo>> fetchPhotosClassifiedBySubscribedTagsOfUser(String userName) {
+    public Map<Tag, List<Photo>> fetchPhotosClassifiedBySubscribedTagsOfUser(
+            String userName) {
         User user = userFacade.retrieveUserByUserName(userName);
         Map<Tag, List<Photo>> result = new HashMap<>();
         for (Tag tag : user.getSubscribedTags()) {
-            // User explicitly subscribed to some tags => Directly show photos
-            // under these tags is ok. This includes UserTag that the user
-            // has subscribed to.
-            result.put(tag, tag.getPhotosUnderThisTag());
+            // User explicitly subscribed to some tags => Directly showing public
+            // photos under these tags is ok. This also includes UserTag that the
+            // user has subscribed to.
+            List<Photo> publicPhotos = tag.getPhotosUnderThisTag().stream()
+                    .filter(p -> !p.isPrivate())
+                    .collect(Collectors.toList());
+            result.put(tag, publicPhotos);
         }
         return result;
     }
 
     /**
-     * Retrieves all photos that are tagged by a tag, either normal tag or user
-     * tag.
+     * Retrieves all publicly-available photos that are tagged by a tag, either
+     * normal tag or user tag.
      *
-     * @param tagName tag name whose photos are being fetched
-     * @return list of photos under this tag
+     * @param tagName tag name by which photos are tagged
+     * @return list of public photos under this tag
      */
     public List<Photo> searchPhotosByTag(String tagName) {
         Tag tag;
@@ -84,7 +88,8 @@ public class BrowseService {
         }
         // Concrete type of tag doesn't matter, because here getPhotosUnderThisTag()
         //is called, which is in super class - Tag
-        return tag.getPhotosUnderThisTag();
+        return tag.getPhotosUnderThisTag().stream().filter(
+                p -> !p.isPrivate()).collect(Collectors.toList());
     }
 
 }
