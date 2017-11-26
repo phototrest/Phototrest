@@ -139,8 +139,12 @@ public class User implements Serializable {
         this.subscribedTags = subscribedTags;
     }
     
-    public void addSubscribedTag(Tag tag){
+    public void addSubscribedTag(Tag tag) {
         this.subscribedTags.add(tag);
+    }
+    
+    public void removeSubscribedTag(Tag tag) {
+        this.subscribedTags.remove(tag);
     }
 
     public List<Photo> getUploadedPhotos() {
@@ -153,6 +157,10 @@ public class User implements Serializable {
     
     public void addUploadedPhoto(Photo photo) {
         this.uploadedPhotos.add(photo);
+    }
+    
+    public void removeUploadedPhoto(Photo photo) {
+        this.uploadedPhotos.remove(photo);
     }
 
     public boolean isIsAdmin() {
@@ -180,5 +188,5 @@ public class User implements Serializable {
     public String toString() {
         return "edu.uwaterloo.ece658.entity.User[ id=" + id + " username: " + userName + " " + " ]";
     }
-
+    
 }

@@ -45,8 +45,8 @@ public class SubscriptionService {
         Tag tag = tagFacade.getNormalTagByName(tagName);
         User user = userFacade.findUserByUserName(username);
         
-        tag.getSubscribedUsers().remove(user);
-        user.getSubscribedTags().remove(tag);
+        tag.removeSubscribedUser(user);
+        user.removeSubscribedTag(tag);
         
         tagFacade.edit(tag);
         userFacade.edit(user);
@@ -77,7 +77,5 @@ public class SubscriptionService {
         }
         return true;
     }
-    
-    
     
 }

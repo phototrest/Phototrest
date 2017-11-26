@@ -28,6 +28,10 @@ public class S3Service {
     final private String accessKey = "AKIAI3V5NZVUSNCMDN7Q";
     final private String secretKey = "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";
     final private String bucketName = "phototrest";
+    final private BasicAWSCredentials creds = 
+            new BasicAWSCredentials(accessKey, secretKey);
+    final private AmazonS3 s3Client = AmazonS3ClientBuilder.standard().
+            withCredentials(new AWSStaticCredentialsProvider(creds)).build();
     
     public URL getUploadURL(String s3Key) {
         URL uploadURL = getS3Url(s3Key, HttpMethod.PUT);
@@ -46,12 +50,6 @@ public class S3Service {
      * @return 
      */
     private URL getS3Url(String objectKey, HttpMethod method) {
-        BasicAWSCredentials creds =
-                new BasicAWSCredentials(accessKey, secretKey);
-        
-        AmazonS3 s3Client = AmazonS3ClientBuilder.standard().withCredentials(
-                new AWSStaticCredentialsProvider(creds)).build();
-        
         URL url = null;
         try {
                 java.util.Date expiration = new java.util.Date();
@@ -85,14 +83,9 @@ public class S3Service {
     }
     
     public boolean deleteImage(String s3key) {
-        BasicAWSCredentials creds =
-                new BasicAWSCredentials(accessKey, secretKey);
-        
-        AmazonS3 s3Client = AmazonS3ClientBuilder.standard().withCredentials(
-                new AWSStaticCredentialsProvider(creds)).build();
-        
         try {
             s3Client.deleteObject(new DeleteObjectRequest(bucketName, s3key));
+            return true;
         } catch (AmazonServiceException ase) {
             System.out.println("Caught an AmazonServiceException.");
             System.out.println("Error Message:    " + ase.getMessage());
@@ -106,6 +99,6 @@ public class S3Service {
             System.out.println("Error Message: " + ace.getMessage());
             return false;
         }
-        return true;
     }
+    
 }

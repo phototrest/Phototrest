@@ -37,9 +37,9 @@ public class DataHandlerService {
     private TagFacade tagFacade;
 
     @EJB
-    private S3Service s3Util;
+    private S3Service S3Service;
     
-    private Photo initializePhoto(
+    private Photo createNewPhoto(
             String S3key,
             String Md5,
             Integer photoSize, 
@@ -89,10 +89,9 @@ public class DataHandlerService {
             boolean isPrivatePhoto,
             List<String> tagNames)
     {
-        // store key in table with tags
         List<Tag> tags = initializeTags(tagNames);
         User user = userFacade.findUserByUserName(username);
-        Photo photo = initializePhoto(
+        Photo photo = createNewPhoto(
                         S3key,
                         Md5,
                         photoSize,
@@ -100,13 +99,14 @@ public class DataHandlerService {
                         isPrivatePhoto);
         
         photo.setTags(tags);
-        photo.addUser(user);
+        photo.addUploadedUser(user);
+        photoFacade.edit(photo);
         
         user.addUploadedPhoto(photo);
         userFacade.edit(user);
         
         for (Tag tag : tags) {
-            tag.addPhoto(photo);
+            tag.addPhotoUnderThisTag(photo);
             tagFacade.edit(tag);
         }
         
@@ -119,9 +119,10 @@ public class DataHandlerService {
         User user = userFacade.findUserByUserName(username);
         Tag tag = tagFacade.getNormalTagByName(tagName);
         
+        //TODO: throw exception if not found
         if (photo.getUploadedUsers().contains(user)) {
-            photo.getTags().remove(tag);
-            tag.getPhotosUnderThisTag().remove(photo);
+            photo.removeTag(tag);
+            tag.removePhotoUnderThisTag(photo);
             tagFacade.edit(tag);
             photoFacade.edit(photo);
         }
@@ -132,9 +133,10 @@ public class DataHandlerService {
         User user = userFacade.findUserByUserName(username);
         Tag tag = initializeTag(tagName);
         
+        // TODO: throw exception if not found
         if (photo.getUploadedUsers().contains(user)) {
             photo.addTag(tag);
-            tag.addPhoto(photo);
+            tag.addPhotoUnderThisTag(photo);
             tagFacade.edit(tag);
             photoFacade.edit(photo);
         }
@@ -143,18 +145,20 @@ public class DataHandlerService {
     public boolean deleteImage(String username, String S3key) {
         Photo photo = photoFacade.getPhotoByS3Key(S3key);
         User user = userFacade.findUserByUserName(username);
+        //TODO: throw exception if not found
         if (photo != null && photo.getUploadedUsers().contains(user)) {
-            user.getUploadedPhotos().remove(photo);
+            user.removeUploadedPhoto(photo);
             userFacade.edit(user);
             for (Tag tag : photo.getTags()) {
-                tag.getPhotosUnderThisTag().remove(photo);
+                tag.removePhotoUnderThisTag(photo);
                 tagFacade.edit(tag);
             }
             photoFacade.remove(photo);
             
-            return s3Util.deleteImage(S3key);
+            return S3Service.deleteImage(S3key);
         }
         
         return false;
     }
+    
 }

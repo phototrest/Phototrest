@@ -95,10 +95,14 @@ public class Photo implements Serializable {
         this.uploadedUsers = uploadedUsers;
     }
     
-    public void addUser(User user) {
+    public void addUploadedUser(User user) {
         this.uploadedUsers.add(user);
     }
 
+    public void removeUploadedUser(User user) {
+        this.uploadedUsers.remove(user);
+    }
+    
     public List<Tag> getTags() {
         return tags;
     }
@@ -109,6 +113,10 @@ public class Photo implements Serializable {
     
     public void addTag(Tag tag) {
         this.tags.add(tag);
+    }
+    
+    public void removeTag(Tag tag) {
+        this.tags.remove(tag);
     }
 
     public String getMd5() {
@@ -151,5 +159,5 @@ public class Photo implements Serializable {
     public String toString() {
         return "edu.uwaterloo.ece658.entity.Photo[ id=" + id + " ]";
     }
-
+    
 }

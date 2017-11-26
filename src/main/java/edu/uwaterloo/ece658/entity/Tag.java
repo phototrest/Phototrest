@@ -65,6 +65,10 @@ public class Tag implements Serializable {
     public void addSubscribedUser(User user){
         this.subscribedUsers.add(user);
     }
+    
+    public void removeSubscribedUser(User user) {
+        this.subscribedUsers.remove(user);
+    }
 
     public List<Photo> getPhotosUnderThisTag() {
         return photosUnderThisTag;
@@ -74,8 +78,12 @@ public class Tag implements Serializable {
         this.photosUnderThisTag = photosUnderThisTag;
     }
     
-    public void addPhoto(Photo photo) {
+    public void addPhotoUnderThisTag(Photo photo) {
         this.photosUnderThisTag.add(photo);
+    }
+    
+    public void removePhotoUnderThisTag(Photo photo) {
+        this.photosUnderThisTag.remove(photo);
     }
 
     @Override
