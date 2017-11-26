@@ -31,7 +31,7 @@ public class TagFacade extends AbstractFacade<Tag> {
         super(Tag.class);
     }
 
-    public Tag getNormalTagByName(String name) {
+    public Tag retrieveNormalTagByName(String name) {
         TypedQuery query = em.createQuery(
                 "SELECT t FROM Tag t WHERE t.name=:name", Tag.class);
         query.setParameter("name", name);
@@ -40,7 +40,7 @@ public class TagFacade extends AbstractFacade<Tag> {
         return resultList.isEmpty() ? null : resultList.get(0);
     }
 
-    public List<Tag> getNormalTagContainingName(String partialName) {
+    public List<Tag> retrieveNormalTagContainingName(String partialName) {
         TypedQuery query = em.createQuery(
                 "SELECT t FROM Tag t WHERE t.name LIKE :partialName", Tag.class);
         query.setParameter("partialName", '%' + partialName + '%');

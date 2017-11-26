@@ -58,7 +58,7 @@ public class UserTagFacade extends AbstractFacade<UserTag> {
                 && userFacade.existUser(userTag.substring(1));
     }
 
-    public UserTag getUserTagByUserName(String userName) {
+    public UserTag retrieveUserTagByUserName(String userName) {
         TypedQuery query = em.createQuery(
                 "SELECT t FROM UserTag t WHERE t.name=:userName", UserTag.class);
         query.setParameter("name", userName);
