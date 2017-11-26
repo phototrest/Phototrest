@@ -7,6 +7,7 @@ package edu.uwaterloo.ece658.session;
 
 import edu.uwaterloo.ece658.entity.Tag;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,6 +20,9 @@ import javax.persistence.TypedQuery;
 @Stateless
 public class TagFacade extends AbstractFacade<Tag> {
 
+    @EJB
+    private UserFacade userFacade;
+
     @PersistenceContext(unitName = "PhototrestPU")
     private EntityManager em;
 
@@ -29,6 +33,26 @@ public class TagFacade extends AbstractFacade<Tag> {
 
     public TagFacade() {
         super(Tag.class);
+    }
+
+    public void create(Tag entity) {
+        if (entity.getName().startsWith("@") && !isValidUserTag(entity.getName())) {
+            return;// TODO Should throw exception rather than silently ignoring
+        }
+        super.create(entity);
+    }
+
+    public void edit(Tag entity) {
+        if (entity.getName().startsWith("@") && !isValidUserTag(entity.getName())) {
+            return;// TODO Should throw exception rather than silently ignoring
+        }
+        super.create(entity);
+    }
+
+    // Validat a tag that starts with "@" and no other occurrences of "@" and the
+    // user must exist in the User table
+    private boolean isValidUserTag(String userTag) {
+        return userFacade.existUser(userTag.substring(1));
     }
 
     public Tag retrieveTagByName(String name) {

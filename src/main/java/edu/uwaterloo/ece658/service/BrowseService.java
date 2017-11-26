@@ -10,7 +10,6 @@ import edu.uwaterloo.ece658.entity.Tag;
 import edu.uwaterloo.ece658.entity.User;
 import edu.uwaterloo.ece658.session.TagFacade;
 import edu.uwaterloo.ece658.session.UserFacade;
-import edu.uwaterloo.ece658.session.UserTagFacade;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,8 +29,6 @@ public class BrowseService {
     private UserFacade userFacade;
     @EJB
     private TagFacade tagFacade;
-    @EJB
-    private UserTagFacade userTagFacade;
 
     /**
      * Given a username, fetch all the photos uploaded by this user.
@@ -68,26 +65,13 @@ public class BrowseService {
     }
 
     /**
-     * Retrieves all publicly-available photos that are tagged by a tag, either
-     * normal tag or user tag.
+     * Retrieves all publicly-available photos that are tagged by a tag.
      *
      * @param tagName tag name by which photos are tagged
      * @return list of public photos under this tag
      */
     public List<Photo> searchPhotosByTag(String tagName) {
-        Tag tag;
-        if (tagName.startsWith("@")) {
-            // User tag
-            // TODO I'm not sure if calling userTagFacade is the only way to fetch
-            // UserTag. If tagFacade can also do this job, there is no need to
-            // call two different facades here.
-            tag = userTagFacade.retrieveUserTagByUserName(tagName);
-        } else {
-            // Normal tag
-            tag = tagFacade.retrieveTagByName(tagName);
-        }
-        // Concrete type of tag doesn't matter, because here getPhotosUnderThisTag()
-        //is called, which is in super class - Tag
+        Tag tag = tagFacade.retrieveTagByName(tagName);
         return tag.getPhotosUnderThisTag().stream().filter(
                 p -> !p.isPrivate()).collect(Collectors.toList());
     }
