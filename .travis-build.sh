@@ -13,4 +13,4 @@ fi
 
 echo "------ Start Building ------"
 # Build
-(cd $ROOT/Phototrest && mvn clean package)
+(cd $ROOT/Phototrest && mvn clean test)
