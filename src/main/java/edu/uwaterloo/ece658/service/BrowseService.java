@@ -84,7 +84,7 @@ public class BrowseService {
             tag = userTagFacade.retrieveUserTagByUserName(tagName);
         } else {
             // Normal tag
-            tag = tagFacade.retrieveNormalTagByName(tagName);
+            tag = tagFacade.retrieveTagByName(tagName);
         }
         // Concrete type of tag doesn't matter, because here getPhotosUnderThisTag()
         //is called, which is in super class - Tag

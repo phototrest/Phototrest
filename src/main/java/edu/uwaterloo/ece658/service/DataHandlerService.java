@@ -32,21 +32,20 @@ public class DataHandlerService {
 
     @EJB
     private PhotoFacade photoFacade;
-    
+
     @EJB
     private TagFacade tagFacade;
 
     @EJB
     private S3Service s3Service;
-    
+
     private Photo createNewPhoto(
             String s3key,
             String Md5,
-            Integer photoSize, 
-            Date uploadDate, 
-            boolean isPrivatePhoto)
-    {
-        Photo photo = new Photo();        
+            Integer photoSize,
+            Date uploadDate,
+            boolean isPrivatePhoto) {
+        Photo photo = new Photo();
         photo.setS3Key(s3key);
         photo.setMd5(Md5);
         photo.setSize(photoSize);
@@ -55,80 +54,79 @@ public class DataHandlerService {
         photoFacade.create(photo);
         return photo;
     }
-    
+
     private Tag createNewTag(String tagName) {
         Tag tag = new Tag();
         tag.setName(tagName);
         tagFacade.create(tag);
         return tag;
     }
-    
+
     private Tag initializeTag(String tagName) {
-        Tag tag = tagFacade.getNormalTagByName(tagName);
+        Tag tag = tagFacade.retrieveTagByName(tagName);
         if (tag == null) {
             tag = createNewTag(tagName);
         }
         return tag;
     }
-    
+
     private List<Tag> initializeTags(List<String> tagNames) {
         List<Tag> tags = new ArrayList<>();
-        
+
         for (String tagName : tagNames) {
             tags.add(initializeTag(tagName));
         }
         return tags;
     }
-    
+
     public boolean updateDatabaseWithPhotoInformation(
-            String username, 
+            String username,
             String s3key,
             String Md5,
-            Integer photoSize, 
+            Integer photoSize,
             Date uploadDate,
             boolean isPrivatePhoto,
-            List<String> tagNames)
-    {
+            List<String> tagNames) {
         List<Tag> tags = initializeTags(tagNames);
-        User user = userFacade.findUserByUserName(username);
+        User user = userFacade.retrieveUserByUserName(username);
         Photo photo = createNewPhoto(
-                        s3key,
-                        Md5,
-                        photoSize,
-                        uploadDate,
-                        isPrivatePhoto);
-        
+                s3key,
+                Md5,
+                photoSize,
+                uploadDate,
+                isPrivatePhoto);
+
         photo.setTags(tags);
         photo.addUploadedUser(user);
         photoFacade.edit(photo);
-        
+
         user.addUploadedPhoto(photo);
         userFacade.edit(user);
-        
+
         for (Tag tag : tags) {
             tag.addPhotoUnderThisTag(photo);
             tagFacade.edit(tag);
         }
-        
+
         // call notify to send messages to users
         if (!isPrivatePhoto) {
             return subscriptionService.notifyUsersBySubscribedTags(tags, photo);
         }
-        
+
         return true;
     }
-    
-    public void removeTagFromPhoto(Photo photo, Tag tag) {        
+
+    public void removeTagFromPhoto(Photo photo, Tag tag) {
         photo.removeTag(tag);
         tag.removePhotoUnderThisTag(photo);
         tagFacade.edit(tag);
         photoFacade.edit(photo);
     }
-    
+
     public void updatePhotoTags(String username, String s3Key, List<String> newTags) {
-        Photo photo = photoFacade.getPhotoByS3Key(s3Key);
-        User user = userFacade.findUserByUserName(username);
-        
+        Photo photo = photoFacade.retrievePhotoByS3Key(s3Key);
+        User user = userFacade.retrieveUserByUserName(username);
+
         if (photo.getUploadedUsers().contains(user)) {
             List<String> tagNames = new ArrayList<>();
             for (Tag tag : photo.getTags()) {
@@ -144,7 +142,7 @@ public class DataHandlerService {
             }
         }
     }
-    
+
     public void addTagToPhoto(Photo photo, String tagName) {
         Tag tag = initializeTag(tagName);
         photo.addTag(tag);
@@ -152,10 +150,10 @@ public class DataHandlerService {
         tagFacade.edit(tag);
         photoFacade.edit(photo);
     }
-    
+
     public boolean deleteImage(String username, String s3key) {
-        Photo photo = photoFacade.getPhotoByS3Key(s3key);
-        User user = userFacade.findUserByUserName(username);
+        Photo photo = photoFacade.retrievePhotoByS3Key(s3key);
+        User user = userFacade.retrieveUserByUserName(username);
         //TODO: throw exception if not found
         if (photo != null && photo.getUploadedUsers().contains(user)) {
             user.removeUploadedPhoto(photo);
@@ -165,11 +163,11 @@ public class DataHandlerService {
                 tagFacade.edit(tag);
             }
             photoFacade.remove(photo);
-            
+
             return s3Service.deleteImage(s3key);
         }
-        
+
         return false;
     }
-    
+
 }

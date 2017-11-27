@@ -23,42 +23,42 @@ public class SubscriptionService {
 
     @EJB
     private TagFacade tagFacade;
-    
+
     @EJB
     private UserFacade userFacade;
-    
+
     public boolean subscribeToTag(String username, String tagName) {
-        Tag tag = tagFacade.getNormalTagByName(tagName);
-        
-        User user = userFacade.findUserByUserName(username);
+        Tag tag = tagFacade.retrieveTagByName(tagName);
+
+        User user = userFacade.retrieveUserByUserName(username);
         user.addSubscribedTag(tag);
         tag.addSubscribedUser(user);
-        
+
         tagFacade.edit(tag);
         userFacade.edit(user);
-        
+
         return false;
     }
 
     public boolean unsubscribeFromTag(String username, String tagName) {
         // remove tag from user's subscriptions in database
-        Tag tag = tagFacade.getNormalTagByName(tagName);
-        User user = userFacade.findUserByUserName(username);
-        
+        Tag tag = tagFacade.retrieveTagByName(tagName);
+        User user = userFacade.retrieveUserByUserName(username);
+
         tag.removeSubscribedUser(user);
         user.removeSubscribedTag(tag);
-        
+
         tagFacade.edit(tag);
         userFacade.edit(user);
-        
+
         return false;
     }
-    
+
     private boolean sendNotification(User user, Photo photo) {
-        // TODO: send notification? 
+        // TODO: send notification?
         return true;
     }
-    
+
     private boolean notifyUsers(List<User> users, Photo photo) {
         for (User user : users) {
             if (!sendNotification(user, photo)) {
@@ -67,7 +67,7 @@ public class SubscriptionService {
         }
         return true;
     }
-    
+
     public boolean notifyUsersBySubscribedTags(List<Tag> tags, Photo photo) {
         // iterate through list of users in each tag and send notification
         for (Tag tag : tags) {
@@ -77,5 +77,5 @@ public class SubscriptionService {
         }
         return true;
     }
-    
+
 }
