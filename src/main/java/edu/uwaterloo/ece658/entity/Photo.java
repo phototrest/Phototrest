@@ -127,7 +127,7 @@ public class Photo implements Serializable {
         this.md5 = md5;
     }
 
-    public boolean isIsPrivate() {
+    public boolean isPrivate() {
         return isPrivate;
     }
 

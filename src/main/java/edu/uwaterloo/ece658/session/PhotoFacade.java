@@ -31,7 +31,7 @@ public class PhotoFacade extends AbstractFacade<Photo> {
         super(Photo.class);
     }
 
-    public Photo getPhotoByS3Key(String s3Key) {
+    public Photo retrievePhotoByS3Key(String s3Key) {
         TypedQuery query = em.createQuery(
                 "SELECT p FROM Photo p WHERE p.s3Key=:s3Key", Photo.class);
         query.setParameter("s3Key", s3Key);
