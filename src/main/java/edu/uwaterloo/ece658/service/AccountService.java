@@ -99,8 +99,11 @@ public class AccountService {
     public String retrieveFullNameOfUser(String userName, boolean isAdmin) {
         assert userFacade.existUserWithRole(userName, isAdmin);
         User user = userFacade.retrieveUserByUserNameAndRole(userName, isAdmin);
-        return user.getfName() == null ? "FNU" : user.getfName() + " , "
-                + user.getlName() == null ? "LNU" : user.getlName();
+        StringBuilder sb = new StringBuilder();
+        sb.append(user.getfName() == null ? "FNU" : user.getfName());
+        sb.append(" ");
+        sb.append(user.getlName() == null ? "LNU" : user.getlName());
+        return sb.toString();
     }
 
     public boolean userAlreadyExist(String userName) {
