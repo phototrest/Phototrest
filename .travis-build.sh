@@ -5,4 +5,4 @@ set -e
 
 echo "------ Start Building ------"
 # Build
-(cd $ROOT/phototrest/Phototrest && mvn clean test)
+(mvn clean test)
