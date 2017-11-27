@@ -159,5 +159,5 @@ public class Photo implements Serializable {
     public String toString() {
         return "edu.uwaterloo.ece658.entity.Photo[ id=" + id + " ]";
     }
-    
+
 }

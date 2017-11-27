@@ -118,32 +118,39 @@ public class DataHandlerService {
         return true;
     }
     
-    public void removeTagFromPhoto(String username, String s3key, String tagName) {
-        Photo photo = photoFacade.getPhotoByS3Key(s3key);
+    public void removeTagFromPhoto(Photo photo, Tag tag) {        
+        photo.removeTag(tag);
+        tag.removePhotoUnderThisTag(photo);
+        tagFacade.edit(tag);
+        photoFacade.edit(photo);
+    }
+    
+    public void updatePhotoTags(String username, String s3Key, List<String> newTags) {
+        Photo photo = photoFacade.getPhotoByS3Key(s3Key);
         User user = userFacade.findUserByUserName(username);
-        Tag tag = tagFacade.getNormalTagByName(tagName);
         
-        //TODO: throw exception if not found
         if (photo.getUploadedUsers().contains(user)) {
-            photo.removeTag(tag);
-            tag.removePhotoUnderThisTag(photo);
-            tagFacade.edit(tag);
-            photoFacade.edit(photo);
+            List<String> tagNames = new ArrayList<>();
+            for (Tag tag : photo.getTags()) {
+                tagNames.add(tag.getName());
+                if (!newTags.contains(tag.getName())) {
+                    removeTagFromPhoto(photo, tag);
+                }
+            }
+            for (String newTag : newTags) {
+                if (!tagNames.contains(newTag)) {
+                    addTagToPhoto(photo, newTag);
+                }
+            }
         }
     }
     
-    public void addTagToPhoto(String username, String s3key, String tagName) {
-        Photo photo = photoFacade.getPhotoByS3Key(s3key);
-        User user = userFacade.findUserByUserName(username);
+    public void addTagToPhoto(Photo photo, String tagName) {
         Tag tag = initializeTag(tagName);
-        
-        // TODO: throw exception if not found
-        if (photo.getUploadedUsers().contains(user)) {
-            photo.addTag(tag);
-            tag.addPhotoUnderThisTag(photo);
-            tagFacade.edit(tag);
-            photoFacade.edit(photo);
-        }
+        photo.addTag(tag);
+        tag.addPhotoUnderThisTag(photo);
+        tagFacade.edit(tag);
+        photoFacade.edit(photo);
     }
     
     public boolean deleteImage(String username, String s3key) {
