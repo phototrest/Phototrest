@@ -92,6 +92,25 @@ public class AccountService {
         userFacade.edit(user);
     }
 
+    public String retrieveFullNameOfUser(String userName) {
+        return retrieveFullNameOfUser(userName, false);
+    }
+
+    public String retrieveFullNameOfUser(String userName, boolean isAdmin) {
+        assert userFacade.existUserWithRole(userName, isAdmin);
+        User user = userFacade.retrieveUserByUserNameAndRole(userName, isAdmin);
+        return user.getfName() == null ? "FNU" : user.getfName() + " , "
+                + user.getlName() == null ? "LNU" : user.getlName();
+    }
+
+    public boolean userAlreadyExist(String userName) {
+        return userAlreadyExist(userName, false);
+    }
+
+    private boolean userAlreadyExist(String userName, boolean isAdmin) {
+        return userFacade.existUserWithRole(userName, isAdmin);
+    }
+
     /*=======================================================================*/
     //Demo Only Purpose methods. Should never be called. Call corresponding
     // methods in UserFacade instead.
