@@ -97,7 +97,7 @@ public class Photo implements Serializable {
     public void setUploadedUsers(List<User> uploadedUsers) {
         this.uploadedUsers = uploadedUsers;
     }
-    
+
     public void addUploadedUser(User user) {
         this.uploadedUsers.add(user);
     }
@@ -105,7 +105,7 @@ public class Photo implements Serializable {
     public void removeUploadedUser(User user) {
         this.uploadedUsers.remove(user);
     }
-    
+
     public List<Tag> getTags() {
         return tags;
     }
@@ -113,11 +113,11 @@ public class Photo implements Serializable {
     public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
-    
+
     public void addTag(Tag tag) {
         this.tags.add(tag);
     }
-    
+
     public void removeTag(Tag tag) {
         this.tags.remove(tag);
     }

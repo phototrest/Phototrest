@@ -61,11 +61,11 @@ public class Tag implements Serializable {
     public void setSubscribedUsers(List<User> subscribedUsers) {
         this.subscribedUsers = subscribedUsers;
     }
-    
-    public void addSubscribedUser(User user){
+
+    public void addSubscribedUser(User user) {
         this.subscribedUsers.add(user);
     }
-    
+
     public void removeSubscribedUser(User user) {
         this.subscribedUsers.remove(user);
     }
@@ -77,11 +77,11 @@ public class Tag implements Serializable {
     public void setPhotosUnderThisTag(List<Photo> photosUnderThisTag) {
         this.photosUnderThisTag = photosUnderThisTag;
     }
-    
+
     public void addPhotoUnderThisTag(Photo photo) {
         this.photosUnderThisTag.add(photo);
     }
-    
+
     public void removePhotoUnderThisTag(Photo photo) {
         this.photosUnderThisTag.remove(photo);
     }
