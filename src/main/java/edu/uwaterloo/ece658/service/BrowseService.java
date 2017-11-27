@@ -10,6 +10,8 @@ import edu.uwaterloo.ece658.entity.Tag;
 import edu.uwaterloo.ece658.entity.User;
 import edu.uwaterloo.ece658.session.TagFacade;
 import edu.uwaterloo.ece658.session.UserFacade;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,29 +31,40 @@ public class BrowseService {
     private UserFacade userFacade;
     @EJB
     private TagFacade tagFacade;
+    @EJB
+    private S3Service s3Service;
 
     /**
-     * Given a username, fetch all the photos uploaded by this user.
+     * Given a username, fetch URLs of all the photos uploaded by this user.
      *
      * @param userName user name whose uploaded photos are being fetched
-     * @return list of photos uploaded by this user
+     * @return list of photos URLs uploaded by this user
      */
-    public List<Photo> fetchUploadedPhotosOfUser(String userName) {
+    public List<URL> fetchUploadedPhotosOfUser(String userName) {
         User user = userFacade.retrieveUserByUserName(userName);
-        return user.getUploadedPhotos();
+        return getURLs(user.getUploadedPhotos());
+    }
+
+    private List<URL> getURLs(List<Photo> photos) {
+        List<URL> result = new ArrayList<>();
+        for (Photo p : photos) {
+            result.add(s3Service.getDownloadURL(p.getS3Key()));
+        }
+        return result;
     }
 
     /**
-     * Given a username, fetch all publicly-available photos classified by the
-     * subscribed tags by this user.
+     * Given a username, fetch URLs of all publicly-available photos classified
+     * by the subscribed tags by this user.
      *
      * @param userName user name whose subscribed photos are being fetched
-     * @return mapping between subscribed tag and public photos under the tag
+     * @return mapping between subscribed tag and URLs of public photos under
+     * the tag
      */
-    public Map<Tag, List<Photo>> fetchPhotosClassifiedBySubscribedTagsOfUser(
+    public Map<String, List<URL>> fetchPhotosClassifiedBySubscribedTagsOfUser(
             String userName) {
         User user = userFacade.retrieveUserByUserName(userName);
-        Map<Tag, List<Photo>> result = new HashMap<>();
+        Map<String, List<URL>> result = new HashMap<>();
         for (Tag tag : user.getSubscribedTags()) {
             // User explicitly subscribed to some tags => Directly showing public
             // photos under these tags is ok. This also includes UserTag that the
@@ -59,21 +72,23 @@ public class BrowseService {
             List<Photo> publicPhotos = tag.getPhotosUnderThisTag().stream()
                     .filter(p -> !p.isPrivate())
                     .collect(Collectors.toList());
-            result.put(tag, publicPhotos);
+            result.put(tag.getName(), getURLs(publicPhotos));
         }
         return result;
     }
 
     /**
-     * Retrieves all publicly-available photos that are tagged by a tag.
+     * Retrieves URLs of all publicly-available photos that are tagged by the
+     * tag.
      *
      * @param tagName tag name by which photos are tagged
-     * @return list of public photos under this tag
+     * @return list of URLs of public photos under this tag
      */
-    public List<Photo> searchPhotosByTag(String tagName) {
+    public List<URL> searchPhotosByTag(String tagName) {
         Tag tag = tagFacade.retrieveTagByName(tagName);
-        return tag.getPhotosUnderThisTag().stream().filter(
+        List<Photo> photos = tag.getPhotosUnderThisTag().stream().filter(
                 p -> !p.isPrivate()).collect(Collectors.toList());
+        return getURLs(photos);
     }
 
 }
