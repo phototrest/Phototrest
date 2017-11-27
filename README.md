@@ -26,3 +26,8 @@ User Name: phototrest_user
 
 
 Password: 123456
+
+## GlassFish Server
+
+
+You MUST use GlassFish 4.1.1 to run the project. Otherwise, it throws ClassNotFoundException for joda library classes.
