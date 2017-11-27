@@ -33,7 +33,7 @@ public class Tag implements Serializable {
     private String name;
 
     @ManyToMany(mappedBy = "subscribedTags")
-    protected List<User> suscribedUsers = new ArrayList<>();
+    protected List<User> subscribedUsers = new ArrayList<>();
 
     @ManyToMany(mappedBy = "tags")
     protected List<Photo> photosUnderThisTag = new ArrayList<>();
@@ -54,12 +54,20 @@ public class Tag implements Serializable {
         this.name = name;
     }
 
-    public List<User> getSuscribedUsers() {
-        return suscribedUsers;
+    public List<User> getSubscribedUsers() {
+        return subscribedUsers;
     }
 
-    public void setSuscribedUsers(List<User> suscribedUsers) {
-        this.suscribedUsers = suscribedUsers;
+    public void setSubscribedUsers(List<User> subscribedUsers) {
+        this.subscribedUsers = subscribedUsers;
+    }
+    
+    public void addSubscribedUser(User user){
+        this.subscribedUsers.add(user);
+    }
+    
+    public void removeSubscribedUser(User user) {
+        this.subscribedUsers.remove(user);
     }
 
     public List<Photo> getPhotosUnderThisTag() {
@@ -68,6 +76,14 @@ public class Tag implements Serializable {
 
     public void setPhotosUnderThisTag(List<Photo> photosUnderThisTag) {
         this.photosUnderThisTag = photosUnderThisTag;
+    }
+    
+    public void addPhotoUnderThisTag(Photo photo) {
+        this.photosUnderThisTag.add(photo);
+    }
+    
+    public void removePhotoUnderThisTag(Photo photo) {
+        this.photosUnderThisTag.remove(photo);
     }
 
     @Override
