@@ -1,8 +1,8 @@
 #!/bin/bash
-ROOT=$TRAVIS_BUILD_DIR/
+ROOT=$TRAVIS_BUILD_DIR
 # Fail the whole script if any command fails
 set -e
 
 echo "------ Start Building ------"
 # Build
-(cd phototrest/Phototrest && mvn clean test)
+(cd $ROOT/phototrest/Phototrest && mvn clean test)
