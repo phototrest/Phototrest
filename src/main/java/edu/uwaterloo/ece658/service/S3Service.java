@@ -11,8 +11,11 @@ import javax.ejb.Stateless;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.HttpMethod;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 
@@ -24,15 +27,15 @@ import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 public class S3Service {
 
     // TODO: assign IAM to each user for S3 access
-    final private String accessKey = "AKIAI3V5NZVUSNCMDN7Q";
-    final private String secretKey = "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";
+    final private String accessKey = "AKIAJWCWANPXM4H3CAMA";
+    final private String secretKey = "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";
     final private String bucketName = "phototrest";
-    final private BasicAWSCredentials creds
-            = new BasicAWSCredentials(accessKey, secretKey);
-//    final private AmazonS3 s3Client = AmazonS3ClientBuilder.standard().
-//            withCredentials(new AWSStaticCredentialsProvider(creds)).build();
-    // The original code throws exception saying region is not set properly.
-    final private AmazonS3 s3Client = null;
+    final private BasicAWSCredentials creds = new BasicAWSCredentials(accessKey, secretKey);
+    final private AmazonS3 s3Client = AmazonS3ClientBuilder
+            .standard()
+            .withRegion(Regions.CA_CENTRAL_1)
+            .withCredentials(new AWSStaticCredentialsProvider(creds))
+            .build();
 
     public URL getUploadURL(String s3Key) {
         URL uploadURL = getS3Url(s3Key, HttpMethod.PUT);
