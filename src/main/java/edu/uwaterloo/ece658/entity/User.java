@@ -8,7 +8,9 @@ package edu.uwaterloo.ece658.entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -46,6 +48,9 @@ public class User implements Serializable {
 
     private String gender;
 
+    @ElementCollection
+    private Map<String, String> subscriptionArns;
+    
     private int age;
 
     private boolean isAdmin = false;
@@ -75,7 +80,37 @@ public class User implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
+    
+    public void addSubscriptionArn(String tagName, String subscriptionArn) {
+        this.subscriptionArns.put(tagName, subscriptionArn);
+    }
+    
+    public void removeSubscriptionArn(String tagName, String subscriptionArn) {
+        this.subscriptionArns.remove(tagName, subscriptionArn);
+    }
+    
+    public String getSubscriptionArn(String tagName) {
+        return this.subscriptionArns.get(tagName);
+    }
+    
+    /**
+     * Get the value of subscriptionArns
+     *
+     * @return the value of subscriptionArns
+     */
+    public Map<String, String> getSubscriptionArns() {
+        return subscriptionArns;
+    }
 
+    /**
+     * Set the value of subscriptionArns
+     *
+     * @param subscriptionArns new value of subscriptionArns
+     */
+    public void setSubscriptionArns(Map<String, String> subscriptionArns) {
+        this.subscriptionArns = subscriptionArns;
+    }
+    
     public String getUserName() {
         return userName;
     }

@@ -38,6 +38,9 @@ public class DataHandlerService {
 
     @EJB
     private S3Service s3Service;
+    
+    @EJB
+    private SnsService snsService;
 
     private Photo createNewPhoto(
             String s3key,
@@ -54,11 +57,14 @@ public class DataHandlerService {
         photoFacade.create(photo);
         return photo;
     }
-
+    
     private Tag createNewTag(String tagName) {
         Tag tag = new Tag();
         tag.setName(tagName);
+        
+        snsService.createNewTopic(tag);
         tagFacade.create(tag);
+                
         return tag;
     }
 
@@ -81,7 +87,7 @@ public class DataHandlerService {
 
     public boolean updateDatabaseWithPhotoInformation(
             String username,
-            String s3key,
+            String s3Key,
             String Md5,
             Integer photoSize,
             Date uploadDate,
@@ -90,7 +96,7 @@ public class DataHandlerService {
         List<Tag> tags = initializeTags(tagNames);
         User user = userFacade.retrieveUserByUserName(username);
         Photo photo = createNewPhoto(
-                s3key,
+                s3Key,
                 Md5,
                 photoSize,
                 uploadDate,
@@ -110,7 +116,7 @@ public class DataHandlerService {
 
         // call notify to send messages to users
         if (!isPrivatePhoto) {
-            return subscriptionService.notifyUsersBySubscribedTags(tags, photo);
+            subscriptionService.publishPhotoWithMultipleTags(tags, s3Service.getDownloadURL(s3Key));
         }
 
         return true;
@@ -137,14 +143,16 @@ public class DataHandlerService {
             }
             for (String newTag : newTags) {
                 if (!tagNames.contains(newTag)) {
-                    addTagToPhoto(photo, newTag);
+                    Tag tag = initializeTag(newTag);
+                    addTagToPhoto(photo, tag);
+                    if (!photo.isPrivate())
+                        subscriptionService.publishPhotoWithSingleTag(tag, s3Service.getDownloadURL(s3Key));
                 }
             }
         }
     }
 
-    public void addTagToPhoto(Photo photo, String tagName) {
-        Tag tag = initializeTag(tagName);
+    public void addTagToPhoto(Photo photo, Tag tag) {
         photo.addTag(tag);
         tag.addPhotoUnderThisTag(photo);
         tagFacade.edit(tag);
