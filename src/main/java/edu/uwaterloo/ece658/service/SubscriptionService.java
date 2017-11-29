@@ -51,7 +51,7 @@ public class SubscriptionService {
 
         tag.removeSubscribedUser(user);
         user.removeSubscribedTag(tag);
-        snsService.unsubscribeFromTopic(tagName, user);
+        snsService.unsubscribeFromTopic(tag, user);
 
         tagFacade.edit(tag);
         userFacade.edit(user);
