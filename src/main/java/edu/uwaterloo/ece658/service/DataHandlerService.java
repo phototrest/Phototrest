@@ -57,14 +57,14 @@ public class DataHandlerService {
         photoFacade.create(photo);
         return photo;
     }
-    
+
     private Tag createNewTag(String tagName) {
         Tag tag = new Tag();
         tag.setName(tagName);
         
         snsService.createNewTopic(tag);
         tagFacade.create(tag);
-                
+        
         return tag;
     }
 

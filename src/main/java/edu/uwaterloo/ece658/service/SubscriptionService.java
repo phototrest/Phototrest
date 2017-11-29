@@ -6,12 +6,10 @@
 package edu.uwaterloo.ece658.service;
 
 import javax.ejb.Stateless;
-import edu.uwaterloo.ece658.entity.Photo;
 import edu.uwaterloo.ece658.entity.Tag;
 import edu.uwaterloo.ece658.entity.User;
 import edu.uwaterloo.ece658.session.TagFacade;
 import edu.uwaterloo.ece658.session.UserFacade;
-import com.amazonaws.services.sns.model.SubscribeRequest;
 import java.net.URL;
 import java.util.List;
 import javax.ejb.EJB;
@@ -42,7 +40,7 @@ public class SubscriptionService {
         
         tagFacade.edit(tag);
         userFacade.edit(user);
-        
+
         return false;
     }
 
@@ -57,7 +55,7 @@ public class SubscriptionService {
 
         tagFacade.edit(tag);
         userFacade.edit(user);
-        
+
         return false;
     }
 

@@ -41,7 +41,7 @@ public class SnsService {
     
     public void createNewTopic(Tag tag) {
         CreateTopicRequest createTopicRequest =
-                new CreateTopicRequest("MyNewTopic");
+                new CreateTopicRequest(tag.getName());
         CreateTopicResult createTopicResult =
                 snsClient.createTopic(createTopicRequest);
         tag.setTopicArn(createTopicResult.getTopicArn());
