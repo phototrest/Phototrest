@@ -27,8 +27,8 @@ import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 public class S3Service {
 
     // TODO: assign IAM to each user for S3 access
-    final private String accessKey = "AKIAJWCWANPXM4H3CAMA";
-    final private String secretKey = "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";
+    final private String accessKey = "AKIAIAJFGDELDUTTXRTQ";
+    final private String secretKey = "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";
     final private String bucketName = "phototrest";
     final private BasicAWSCredentials creds = new BasicAWSCredentials(accessKey, secretKey);
     final private AmazonS3 s3Client = AmazonS3ClientBuilder
