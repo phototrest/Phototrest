@@ -36,7 +36,7 @@ public class SubscriptionService {
         User user = userFacade.retrieveUserByUserName(username);
         user.addSubscribedTag(tag);
         tag.addSubscribedUser(user);
-        snsService.subscribeToTopic(tag.getTopicArn(), tagName, user);
+        snsService.subscribeToTopic(tag, user);
         
         tagFacade.edit(tag);
         userFacade.edit(user);

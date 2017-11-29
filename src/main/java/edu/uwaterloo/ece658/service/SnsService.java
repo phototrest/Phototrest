@@ -47,8 +47,9 @@ public class SnsService {
         tag.setTopicArn(createTopicResult.getTopicArn());
     }
     
-    public void subscribeToTopic(String topicArn, String tagName, User user) {
+    public void subscribeToTopic(Tag tag, User user) {
         //subscribe to an SNS topic
+        String topicArn = tag.getTopicArn();
         SubscribeRequest subRequest =
                 new SubscribeRequest(topicArn, "email", user.getEmail());
         snsClient.subscribe(subRequest);
