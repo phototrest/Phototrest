@@ -1,0 +1,27 @@
+@charset "utf-8";
+/* CSS Document */
+body{margin:0;background:url(../images/content.png);}
+form,ul,ol,li{padding:0;}
+ul,ol,li{list-style:none;margin:0;}
+a{text-decoration:none;}
+/*清空浮动的代码-start*/
+.clr:after{visibility:hidden;display:block;font-size:0;content:" ";clear:both;height:0;}
+.clr{display:inline-block;}
+html[xmlns] .clr{display:block;}
+* html .clr{height:1%;}
+/*清空浮动的代码-end*/
+.inmain{width:936px;margin:0 auto;overflow:hidden;}
+.main_left{width:230px;float:left;}
+.main_left ul li{font-weight:bold;font-size:14px;}
+.main_left ul li{height:26px;line-height:26px;width:200px;cursor:pointer;display:block;}
+.main_left ul li.rem_left{color:#8BBF5D;}
+.rem_left1{color:#8BBF5D;}
+
+.main_right{width:700px;float:right;}
+.main_right ul{width:730px;}
+.main_right ul li{float:left;width:234px;height:180px;text-align:center;font-size:14px;font-weight:bold;line-height:24px;cursor:pointer;margin-bottom:20px;}
+.main_right ul li a{color:#84878C;float:left;}
+.main_right ul li img{border:1px solid #ccc;background:#FFF;padding:5px;display:block}
+.main_right ul li span{display:block;font-weight:200;color:#84878C;}
+.main_right ul li.movie_scroll_hov img{border:1px solid #779e00;}
+.main_right ul li.movie_scroll_hov a{color:#779e00;}
