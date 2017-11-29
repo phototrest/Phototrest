@@ -11,11 +11,12 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import static javax.persistence.GenerationType.SEQUENCE;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -29,7 +30,8 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "User_Seq", allocationSize = 5000, initialValue = 4)
+    @GeneratedValue(strategy = SEQUENCE, generator = "User_Seq")
     protected Long id;
 
     @Column(unique = true, nullable = false)
@@ -139,11 +141,11 @@ public class User implements Serializable {
     public void setSubscribedTags(List<Tag> subscribedTags) {
         this.subscribedTags = subscribedTags;
     }
-    
+
     public void addSubscribedTag(Tag tag) {
         this.subscribedTags.add(tag);
     }
-    
+
     public void removeSubscribedTag(Tag tag) {
         this.subscribedTags.remove(tag);
     }
@@ -155,11 +157,11 @@ public class User implements Serializable {
     public void setUploadedPhotos(List<Photo> uploadedPhotos) {
         this.uploadedPhotos = uploadedPhotos;
     }
-    
+
     public void addUploadedPhoto(Photo photo) {
         this.uploadedPhotos.add(photo);
     }
-    
+
     public void removeUploadedPhoto(Photo photo) {
         this.uploadedPhotos.remove(photo);
     }
@@ -189,5 +191,5 @@ public class User implements Serializable {
     public String toString() {
         return "edu.uwaterloo.ece658.entity.User[ id=" + id + " username: " + userName + " " + " ]";
     }
-    
+
 }
