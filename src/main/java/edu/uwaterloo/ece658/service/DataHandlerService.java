@@ -38,7 +38,7 @@ public class DataHandlerService {
 
     @EJB
     private S3Service s3Service;
-    
+
     @EJB
     private SnsService snsService;
 
@@ -57,21 +57,21 @@ public class DataHandlerService {
         photoFacade.create(photo);
         return photo;
     }
-    
+
     public boolean isUserSubscribed(String tagName, String username) {
         Tag tag = tagFacade.retrieveTagByName(tagName);
         User user = userFacade.retrieveUserByUserName(username);
-        
+
         return user.getSubscribedTags().contains(tag);
     }
 
     private Tag createNewTag(String tagName) {
         Tag tag = new Tag();
         tag.setName(tagName);
-        
+
         snsService.createNewTopic(tag);
         tagFacade.create(tag);
-        
+
         return tag;
     }
 
@@ -102,12 +102,11 @@ public class DataHandlerService {
             List<String> tagNames) {
         List<Tag> tags = initializeTags(tagNames);
         User user = userFacade.retrieveUserByUserName(username);
-        Photo photo = createNewPhoto(
-                s3Key,
-                Md5,
-                photoSize,
-                uploadDate,
-                isPrivatePhoto);
+        Photo photo = photoFacade.retrievePhotoByS3Key(s3key);
+        if (photo == null) {
+            photo = createNewPhoto(
+                    s3Key, Md5, photoSize, uploadDate, isPrivatePhoto);
+        }
 
         photo.setTags(tags);
         photo.addUploadedUser(user);
@@ -152,8 +151,9 @@ public class DataHandlerService {
                 if (!tagNames.contains(newTag)) {
                     Tag tag = initializeTag(newTag);
                     addTagToPhoto(photo, tag);
-                    if (!photo.isPrivate())
+                    if (!photo.isPrivate()) {
                         subscriptionService.publishPhotoWithSingleTag(tag, s3Service.getDownloadURL(s3Key));
+                    }
                 }
             }
         }
