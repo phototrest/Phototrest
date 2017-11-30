@@ -33,7 +33,10 @@ public class Tag implements Serializable {
 
     @Column(unique = true, nullable = false)
     private String name;
-
+    
+    @Column(unique=true, nullable=false)
+    private String topicArn;
+    
     @ManyToMany(mappedBy = "subscribedTags")
     protected List<User> subscribedUsers = new ArrayList<>();
 
@@ -46,6 +49,24 @@ public class Tag implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    /**
+     * Get the value of topicArn
+     *
+     * @return the value of topicArn
+     */
+    public String getTopicArn() {
+        return topicArn;
+    }
+
+    /**
+     * Set the value of topicArn
+     *
+     * @param topicArn new value of topicArn
+     */
+    public void setTopicArn(String topicArn) {
+        this.topicArn = topicArn;
     }
 
     public String getName() {

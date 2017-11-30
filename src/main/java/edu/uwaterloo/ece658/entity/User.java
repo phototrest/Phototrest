@@ -8,7 +8,9 @@ package edu.uwaterloo.ece658.entity;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import static javax.persistence.GenerationType.SEQUENCE;
@@ -47,7 +49,7 @@ public class User implements Serializable {
     private String lName;
 
     private String gender;
-
+    
     private int age;
 
     private boolean isAdmin = false;
@@ -77,7 +79,7 @@ public class User implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-
+    
     public String getUserName() {
         return userName;
     }
