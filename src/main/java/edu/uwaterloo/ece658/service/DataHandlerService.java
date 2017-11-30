@@ -54,6 +54,13 @@ public class DataHandlerService {
         photoFacade.create(photo);
         return photo;
     }
+    
+    public boolean isUserSubscribed(String tagName, String username) {
+        Tag tag = tagFacade.retrieveTagByName(tagName);
+        User user = userFacade.retrieveUserByUserName(username);
+        
+        return user.getSubscribedTags().contains(tag);
+    }
 
     private Tag createNewTag(String tagName) {
         Tag tag = new Tag();
