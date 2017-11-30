@@ -11,9 +11,10 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import static javax.persistence.GenerationType.SEQUENCE;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 /**
@@ -26,12 +27,16 @@ public class Tag implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "Tag_Seq", allocationSize = 5000, initialValue = 6)
+    @GeneratedValue(strategy = SEQUENCE, generator = "Tag_Seq")
     protected Long id;
 
     @Column(unique = true, nullable = false)
     private String name;
-
+    
+    @Column(unique=true, nullable=false)
+    private String topicArn;
+    
     @ManyToMany(mappedBy = "subscribedTags")
     protected List<User> subscribedUsers = new ArrayList<>();
 
@@ -44,6 +49,24 @@ public class Tag implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    /**
+     * Get the value of topicArn
+     *
+     * @return the value of topicArn
+     */
+    public String getTopicArn() {
+        return topicArn;
+    }
+
+    /**
+     * Set the value of topicArn
+     *
+     * @param topicArn new value of topicArn
+     */
+    public void setTopicArn(String topicArn) {
+        this.topicArn = topicArn;
     }
 
     public String getName() {
@@ -61,11 +84,11 @@ public class Tag implements Serializable {
     public void setSubscribedUsers(List<User> subscribedUsers) {
         this.subscribedUsers = subscribedUsers;
     }
-    
-    public void addSubscribedUser(User user){
+
+    public void addSubscribedUser(User user) {
         this.subscribedUsers.add(user);
     }
-    
+
     public void removeSubscribedUser(User user) {
         this.subscribedUsers.remove(user);
     }
@@ -77,11 +100,11 @@ public class Tag implements Serializable {
     public void setPhotosUnderThisTag(List<Photo> photosUnderThisTag) {
         this.photosUnderThisTag = photosUnderThisTag;
     }
-    
+
     public void addPhotoUnderThisTag(Photo photo) {
         this.photosUnderThisTag.add(photo);
     }
-    
+
     public void removePhotoUnderThisTag(Photo photo) {
         this.photosUnderThisTag.remove(photo);
     }
