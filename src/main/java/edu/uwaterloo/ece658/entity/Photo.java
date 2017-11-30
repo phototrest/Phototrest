@@ -101,11 +101,15 @@ public class Photo implements Serializable {
     }
 
     public void addUploadedUser(User user) {
-        this.uploadedUsers.add(user);
+        if (!this.uploadedUsers.contains(user)) {
+            this.uploadedUsers.add(user);
+        }
     }
 
     public void removeUploadedUser(User user) {
-        this.uploadedUsers.remove(user);
+        if (this.uploadedUsers.contains(user)) {
+            this.uploadedUsers.remove(user);
+        }
     }
 
     public List<Tag> getTags() {
@@ -117,11 +121,15 @@ public class Photo implements Serializable {
     }
 
     public void addTag(Tag tag) {
-        this.tags.add(tag);
+        if (!this.tags.contains(tag)) {
+            this.tags.add(tag);
+        }
     }
 
     public void removeTag(Tag tag) {
-        this.tags.remove(tag);
+        if (this.tags.contains(tag)) {
+            this.tags.remove(tag);
+        }
     }
 
     public String getMd5() {

@@ -93,7 +93,7 @@
                                 Set<String> tags = subscribed.keySet();
                                 if (tags != null && !tags.isEmpty()) {
                                     for (String tag : tags) {%>
-                        <li rel=<%= tag%> >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  →  <%= tag%></li> <%
+                        <li rel=<%= tag.substring(tag.indexOf("@") + 1)%> >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  →  <%= tag%></li> <%
                                 }
                             }%>
                     </ul>
@@ -108,7 +108,7 @@
                                 <%
                                     for (String tag : tags) {
                                         for (PhotoWrapper wrapper : subscribed.get(tag)) {
-                                %><li rel=<%= tag%>><a href="#"><img src=<%= wrapper.url%> /> &nbsp;&nbsp;</a></li><%
+                                %><li rel=<%= tag.substring(tag.indexOf("@") + 1)%>><a href="#"><img src=<%= wrapper.url%> /> &nbsp;&nbsp;</a></li><%
                                         }
                                     }
                                 %>
