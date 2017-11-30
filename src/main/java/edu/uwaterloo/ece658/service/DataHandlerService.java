@@ -12,6 +12,7 @@ import edu.uwaterloo.ece658.session.PhotoFacade;
 import edu.uwaterloo.ece658.session.TagFacade;
 import edu.uwaterloo.ece658.session.UserFacade;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
@@ -92,11 +93,7 @@ public class DataHandlerService {
         Photo photo = photoFacade.retrievePhotoByS3Key(s3key);
         if (photo == null) {
             photo = createNewPhoto(
-                    s3key,
-                    Md5,
-                    photoSize,
-                    uploadDate,
-                    isPrivatePhoto);
+                    s3key, Md5, photoSize, uploadDate, isPrivatePhoto);
         }
 
         photo.setTags(tags);
@@ -113,7 +110,7 @@ public class DataHandlerService {
 
         // call notify to send messages to users
         if (!isPrivatePhoto) {
-            return subscriptionService.notifyUsersBySubscribedTags(tags, photo);
+            subscriptionService.notifyUsersBySubscribedTags(tags, photo);
         }
 
         return true;
@@ -140,14 +137,17 @@ public class DataHandlerService {
             }
             for (String newTag : newTags) {
                 if (!tagNames.contains(newTag)) {
-                    addTagToPhoto(photo, newTag);
+                    Tag tag = initializeTag(newTag);
+                    addTagToPhoto(photo, tag);
+                    if (!photo.isPrivate()) {
+                        subscriptionService.notifyUsersBySubscribedTags(Arrays.asList(tag), photo);
+                    }
                 }
             }
         }
     }
 
-    public void addTagToPhoto(Photo photo, String tagName) {
-        Tag tag = initializeTag(tagName);
+    public void addTagToPhoto(Photo photo, Tag tag) {
         photo.addTag(tag);
         tag.addPhotoUnderThisTag(photo);
         tagFacade.edit(tag);

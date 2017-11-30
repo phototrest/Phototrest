@@ -87,7 +87,7 @@
             <div class="inmain clr">
                 <div class="main_left">
                     <ul>
-                        <li rel="uploaded">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Uploaded Photos</li>
+                        <li class="rem_left1" rel="uploaded">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Uploaded Photos</li>
                             <%
                                 Map<String, List<PhotoWrapper>> subscribed = (Map<String, List<PhotoWrapper>>) request.getSession().getAttribute("subscribed");
                                 Set<String> tags = subscribed.keySet();
