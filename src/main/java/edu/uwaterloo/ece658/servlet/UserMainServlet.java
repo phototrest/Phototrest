@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package edu.uwaterloo.ece658.servlet;
-import java.io.PrintWriter;
+
 import edu.uwaterloo.ece658.entity.Photo;
 import edu.uwaterloo.ece658.entity.Tag;
 import edu.uwaterloo.ece658.service.BrowseService;
@@ -12,6 +12,7 @@ import edu.uwaterloo.ece658.service.S3Service;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -21,15 +22,16 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 /**
  *
  * @author chris
  */
 @WebServlet(name = "ShowUserPhotosServlet", urlPatterns = {"/ShowUserPhotosServlet"})
-public class ShowUserPhotosServlet extends HttpServlet {
-    @EJB S3Service s3Service;
+public class UserMainServlet extends HttpServlet {
+
+    @EJB
+    S3Service s3Service;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -39,12 +41,28 @@ public class ShowUserPhotosServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-   
-    @EJB BrowseService browseService;
+
+    @EJB
+    BrowseService browseService;
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {        
-         
+            throws ServletException, IOException {
+        String username = (String) request.getSession().getAttribute("username");
+        List<Photo> uploadedPhotolist = browseService.fetchUploadedPhotosOfUser(username);
+        List<PhotoWrapper> uploaded = convertToPhotoWrappers(uploadedPhotolist);
+
+        Map<Tag, List<Photo>> map = browseService.fetchPhotosClassifiedBySubscribedTagsOfUser(username);
+        Map<String, List<PhotoWrapper>> subscribed = new HashMap<>();
+        Set<Tag> tags = map.keySet();
+        for (Tag tag : tags) {
+            List<Photo> photos = map.get(tag);
+            subscribed.put(tag.getName(), convertToPhotoWrappers(photos));
+        }
+
+        request.getSession().setAttribute("uploaded", uploaded);
+        request.getSession().setAttribute("subscribed", subscribed);
+        response.sendRedirect("usermain.jsp");
     }
 
     /**
@@ -58,35 +76,31 @@ public class ShowUserPhotosServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         String username= request.getParameter("name");
-         List<Photo> uploadedPhotolist = browseService.fetchUploadedPhotosOfUser(username);
-         List<PhotoWrapper> uploadedPhotoWrapperList = new ArrayList<>();
-         for(Photo p : uploadedPhotolist) {
-             URL url = s3Service.getDownloadURL(p.getS3Key());
-            // uploadedPhotoWrapperList.add(new PhotoWrapper(p.get));
-         }
+        doGet(request, response);
+    }
 
-         Map<Tag, List<Photo>> map = browseService.fetchPhotosClassifiedBySubscribedTagsOfUser(username);
-         Set<Tag> tags = map.keySet();
-         for(Tag tag : tags) {
-             List<Photo> photos = map.get(tag);
-             for(Photo photo : photos) {
-                 URL url = s3Service.getDownloadURL(photo.getS3Key());
-                 
-             }
-         }
-         //request.setAttribute("photolist", photolist);
-         request.setAttribute("map", map);
-         request.setAttribute("tags", tags);
-         response.sendRedirect("usermain.jsp");
+    private List<PhotoWrapper> convertToPhotoWrappers(List<Photo> photos) {
+        List<PhotoWrapper> photoWrappers = new ArrayList<>();
+        for (Photo p : photos) {
+            URL url = s3Service.getDownloadURL(p.getS3Key());
+            StringBuilder sb = new StringBuilder();
+            for (Tag t : p.getTags()) {
+                sb.append(" #" + t.getName());
+            }
+            photoWrappers.add(new PhotoWrapper(sb.toString(), p.getS3Key(), url.toString()));
+        }
+        return photoWrappers;
     }
 
     public static class PhotoWrapper {
-        public List<String> tags;
+
+        public String tags;
+        public String s3Key;
         public String url;
-        
-        public PhotoWrapper(List<String> tags, String url) {
+
+        public PhotoWrapper(String tags, String s3Key, String url) {
             this.tags = tags;
+            this.s3Key = s3Key;
             this.url = url;
         }
     }

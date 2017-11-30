@@ -89,12 +89,11 @@ public class DataHandlerService {
             List<String> tagNames) {
         List<Tag> tags = initializeTags(tagNames);
         User user = userFacade.retrieveUserByUserName(username);
-        Photo photo = createNewPhoto(
-                s3key,
-                Md5,
-                photoSize,
-                uploadDate,
-                isPrivatePhoto);
+        Photo photo = photoFacade.retrievePhotoByS3Key(s3key);
+        if (photo == null) {
+            photo = createNewPhoto(
+                    s3key, Md5, photoSize, uploadDate, isPrivatePhoto);
+        }
 
         photo.setTags(tags);
         photo.addUploadedUser(user);
