@@ -7,6 +7,7 @@ package edu.uwaterloo.ece658.servlet;
 
 import edu.uwaterloo.ece658.service.DataHandlerService;
 import edu.uwaterloo.ece658.service.S3Service;
+import edu.uwaterloo.ece658.service.SubscriptionService;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -44,6 +45,7 @@ public class UploadPhotosServlet extends HttpServlet {
     
     @EJB S3Service s3Service;
     @EJB DataHandlerService dataHandlerService;
+    @EJB SubscriptionService subscriptionService;
     
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -81,7 +83,7 @@ public class UploadPhotosServlet extends HttpServlet {
          List<String> tagnames = java.util.Arrays.asList(arrayStr);
          String param = String.valueOf(request.getParameter("isPrivatePhoto"));
         boolean isPrivatePhoto = false;
-        if (param == "true"){isPrivatePhoto= true;}
+        if ("private".equals(param)){isPrivatePhoto= true;}
         Date uploadDate = new java.util.Date();
         for(String photo : photos) {
             // Calcualte md5 == s3key
@@ -113,7 +115,10 @@ public class UploadPhotosServlet extends HttpServlet {
                 int reponseCode = connection.getResponseCode();
 //                outputStream.write(photoBinary);
 //                outputStream.flush();
-                dataHandlerService.updateDatabaseWithPhotoInformation(username, s3Key, s3Key, 100, uploadDate, isPrivatePhoto, tagnames);             
+                dataHandlerService.updateDatabaseWithPhotoInformation(username, s3Key, s3Key, 100, uploadDate, isPrivatePhoto, tagnames);
+                for(String tag : tagnames) {
+                    subscriptionService.subscribeToTag(username, tag);
+                }
             // Write to url 怎么把base64 string写到uploadurl里面
             } catch(IOException e) {
                 request.getRequestDispatcher("/upload.jsp").forward(request, response);

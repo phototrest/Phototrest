@@ -98,7 +98,7 @@
             <%}
             }
             else {%>
-                    <div style="font-color:red"> No related pictures related to <%=request.getParameter("tagname")%></div>
+                    <div style="color:red; text-align: center; "> No related pictures related to <%=request.getParameter("tagname")%></div>
             <%}%>
     </ul>
 </div>

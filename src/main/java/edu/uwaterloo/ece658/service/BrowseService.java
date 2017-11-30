@@ -73,7 +73,7 @@ public class BrowseService {
      */
     public List<Photo> searchPhotosByTag(String tagName) {
         Tag tag = tagFacade.retrieveTagByName(tagName);
-        if(tag == null) return new ArrayList<>();
+        if(tag == null) return null;
         return tag.getPhotosUnderThisTag().stream().filter(
                 p -> !p.isPrivate()).collect(Collectors.toList());
     }

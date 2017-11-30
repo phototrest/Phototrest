@@ -69,28 +69,35 @@ public class ShowTagSearchPicturesServlet extends HttpServlet {
         String username = (String) session.getAttribute("username");
         String tag= request.getParameter("tagname");
         List<Photo> SearchPhotos = browseService.searchPhotosByTag(tag);
-        ArrayList<String> urlArray = new ArrayList<>();
-        String check = "subscribed";
-        if(!subscriptionService.isUserSubscribed(tag, username)){
-            check = "unsubscribed";
-        }       
-        if(SearchPhotos != null)
-        {
-            for(Photo searchPhoto : SearchPhotos)
-            {
-                String s3key = searchPhoto.getS3Key();
-                URL url = s3Service.getDownloadURL(s3key); 
-                urlArray.add(url.toString());
-            }
-            session.setAttribute("URLArray", urlArray);
-            session.setAttribute("check", check);
+        if(SearchPhotos == null) {
+            session.setAttribute("check", "CreateAndSubsribe");
+            session.setAttribute("URLArray", null);
             session.setAttribute("tagname", tag);
             request.getRequestDispatcher("/showsearchpictures.jsp").forward(request, response);
         } else {
-            session.setAttribute("URLArray", null);
-            session.setAttribute("tagname", tag);
-            request.setAttribute("check", check);
-            request.getRequestDispatcher("/showsearchpictures.jsp").forward(request, response);
+            ArrayList<String> urlArray = new ArrayList<>();
+            String check = "subscribed";
+            if(!subscriptionService.isUserSubscribed(tag, username)){
+                check = "unsubscribed";
+            }       
+            if(SearchPhotos != null)
+            {
+                for(Photo searchPhoto : SearchPhotos)
+                {
+                    String s3key = searchPhoto.getS3Key();
+                    URL url = s3Service.getDownloadURL(s3key); 
+                    urlArray.add(url.toString());
+                }
+                session.setAttribute("URLArray", urlArray);
+                session.setAttribute("check", check);
+                session.setAttribute("tagname", tag);
+                request.getRequestDispatcher("/showsearchpictures.jsp").forward(request, response);
+            } else {
+                session.setAttribute("URLArray", null);
+                session.setAttribute("tagname", tag);
+                request.setAttribute("check", check);
+                request.getRequestDispatcher("/showsearchpictures.jsp").forward(request, response);
+            }
         }
     }
     

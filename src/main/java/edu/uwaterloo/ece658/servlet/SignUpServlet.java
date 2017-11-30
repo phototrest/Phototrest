@@ -89,8 +89,10 @@ public class SignUpServlet extends HttpServlet {
             if( password != null && !password.isEmpty()) {
                 if( email != null && !email.isEmpty()) {
                     if(!accountService.userAlreadyExist(username)) {
-                         accountService.signUpNewUser(username, password, email);         
+                         accountService.signUpNewUser(username, password, email); 
+                         accountService.updateAdditionalInformation(username, fname, lname, gender, 0);
                         session.setAttribute("username", username);
+                        session.setAttribute("FullName", accountService.retrieveFullNameOfUser(username));
                         //session.setAttribute("info", "Congratulations! Sign Up successfully!");
                         request.getRequestDispatcher("/ShowUserPhotosServlet").forward(request, response);
                     }  

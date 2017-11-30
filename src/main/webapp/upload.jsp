@@ -211,7 +211,7 @@ $(function(){
           <table><tr><td width='45%'>
           <font color='pink'>You have chosen {{imgList.length}} pictures，it's about {{bytesToSize(this.size)}}.</font></td>
                   <td width='30%'><font color='red'>Add a tag : </font><input type="text" name="tags" value="" /></td>
-                  <td width="10%"><input name="isPrivatePhoto" type="radio" value="false">  Private</td><td width="9%"><input type="radio" name="isPrivatePhoto" value="true" checked="true">  Public</td>
+                  <td width="10%"><input name="isPrivatePhoto" type="radio" value="private">  Private</td><td width="9%"><input type="radio" name="isPrivatePhoto" value="public" checked="true">  Public</td>
                   <td width='11%'>
                       <input type="submit" onmouseover="this.style.backgroundColor='#f2f3f3';" onmouseout="this.style.backgroundColor='#2e2e2e';" style="border-radius:4px;width:60px;height:30px;border:2px blue none;background:#2e2e2e;color:yellowgreen;font-size:13px;cursor:pointer;" value="Upload" name="upload"/></td></tr></table>
       </div>
