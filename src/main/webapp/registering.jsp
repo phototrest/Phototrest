@@ -12,7 +12,7 @@
         <title>Register Page</title>
     </head>
     <body>
-        <h1><font color="red" size="5">${info } ${username }</font></h1>
+        <h1><font color="red" size="5">${username }</font></h1>
         
     </body>
 </html>

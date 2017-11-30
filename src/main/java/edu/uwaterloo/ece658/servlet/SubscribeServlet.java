@@ -66,7 +66,7 @@ public class SubscribeServlet extends HttpServlet {
         String username = (String) session.getAttribute("username");
         String tagname = (String) session.getAttribute("tagname");
         String check= request.getParameter("check");
-        if(check == "subscribed"){
+        if("Subscribe".equals(check)){
             subscriptionService.subscribeToTag(username, tagname);
         } else {
             subscriptionService.unsubscribeFromTag(username, tagname);

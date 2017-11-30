@@ -91,8 +91,8 @@ public class SignUpServlet extends HttpServlet {
                     if(!accountService.userAlreadyExist(username)) {
                          accountService.signUpNewUser(username, password, email);         
                         session.setAttribute("username", username);
-                        session.setAttribute("info", "Congratulations! Sign Up successfully!");
-                        request.getRequestDispatcher("/registering.jsp").forward(request, response);
+                        //session.setAttribute("info", "Congratulations! Sign Up successfully!");
+                        request.getRequestDispatcher("/ShowUserPhotosServlet").forward(request, response);
                     }  
                     else {
                         session.setAttribute("errormsg2", "Your UserName exists!");

@@ -56,15 +56,15 @@
                         </div>
                         <div class="row-3 wrapper">
                             <div class="fleft"><font color="#2e2e2e"><span>Main Page</span></font><font color="yellowgreen"><b>Hello, ${FullName } </b></font></div>
-                            <form action="showsearchpictures.jsp" id="search-form">
-                                <fieldset>
-                                    <div class="fright">
-                                        <label> Search</label>
-                                        <span>
-                                            <input type="text" />
-                                        </span><a href="showsearchpictures.jsp" onclick="document.getElementById('search-form').submit()"><img src="img/button.gif" alt="showsearchpictures.jsp" /></a></div>
-                                </fieldset>
-                            </form>
+                             <form action="ShowTagSearchPicturesServlet" id="search-form" method="POST">                    
+                  <fieldset>                   
+                  <div class="fright">  
+                      <table><tr><td>
+                        <input style="width:150px;height:20px;border:1px yellowgreen solid;border-radius:2px;" type="text" name="tagname"/></td>            
+                     <td width="%"><input onmouseover="this.style.backgroundColor='#f2f3f3';" onmouseout="this.style.backgroundColor='#2e2e2e';" type="submit" style="border-radius:2px;width:80px;height:24px;border:2px blue none;background-color:#2e2e2e;color:yellowgreen;font-size:15px;cursor:pointer;" value="Search" name="search" /></td></tr></table>
+                    <!-- </span><a href="ShowTagSearchPicturesServlet" onclick="document.getElementById('search-form').submit()"><img src="img/button.gif" alt="" /></a>--></div>
+                  </fieldset>
+               </form>  
                         </div>
                     </div>
                 </div>

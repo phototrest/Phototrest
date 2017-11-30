@@ -10,6 +10,7 @@ import edu.uwaterloo.ece658.entity.Tag;
 import edu.uwaterloo.ece658.entity.User;
 import edu.uwaterloo.ece658.session.TagFacade;
 import edu.uwaterloo.ece658.session.UserFacade;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +73,7 @@ public class BrowseService {
      */
     public List<Photo> searchPhotosByTag(String tagName) {
         Tag tag = tagFacade.retrieveTagByName(tagName);
+        if(tag == null) return new ArrayList<>();
         return tag.getPhotosUnderThisTag().stream().filter(
                 p -> !p.isPrivate()).collect(Collectors.toList());
     }

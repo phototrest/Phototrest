@@ -3,6 +3,9 @@
     Created on : 21-Nov-2017, 3:05:31 PM
     Author     : chris
 --%>
+<%@page import="java.net.URL"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="java.util.Map"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -13,9 +16,6 @@
 <link href="auto.css" rel="stylesheet" type="text/css" />
 <link href="style.css" rel="stylesheet" type="text/css" />
 <link href="layout.css" rel="stylesheet" type="text/css" />
-<link rel="stylesheet" type="text/css" href="css/style.css">
-<script src="js/jquery-1.6.js" type="text/javascript"></script>
-<script src="js/lyz.delayLoading.min.js" type="text/javascript"></script>
 <!--[if lt IE 7]>
    <link href="ie6.css" rel="stylesheet" type="text/css" />
 <![endif]-->
@@ -40,11 +40,11 @@
                   <li><a href="#"><img src="img/myspace.gif" alt="" /></a></li>
                   <li><a href="#"><img src="img/twitter.gif" alt="" /></a></li>-->
                </ul>              
-                <h1><a href="index.jsp"><strong><font color="yellowgreen">Photo</font></strong><strong><font color="gray">trest</font></strong></a></h1>                                          
+                <h1><a href="/Phototrest/ShowUserPhotosServlet"><strong><font color="yellowgreen">Photo</font></strong><strong><font color="gray">trest</font></strong></a></h1>                                          
             </div>                
             <div class="row-2">
                <ul class="wrapper">
-                  <li class="m1"><a href="index.jsp">Front Page<span>Page d'accueil</span></a></li>
+                  <li class="m1"><a href="landing.jsp">Landing Page<span>Page d'accueil</span></a></li>
                   <li class="m3"><a href="#">News<span>Actualités</span></a></li>
                   <li class="m4"><a href="#">Entertainment<span>Divertissement</span></a></li>
                   <li class="m5"><a href="#">Scenery<span>Beauté</span></a></li>
@@ -53,50 +53,59 @@
                </ul>
             </div>
             <div class="row-3 wrapper">
-                <div class="fleft"><font color="#2e2e2e"><span>Main Page</span></font><font color="yellowgreen"><b>Hello,${Fullname}</b></font> > <font color="red">Tag:###</font>               
+                <div class="fleft"><font color="#2e2e2e"><span>Main Page</span></font><font color="yellowgreen"><b>Hello,${FullName }</b></font>               
                 </div>              
-               <form action="" id="search-form">                  
+                    <form action="ShowTagSearchPicturesServlet" id="search-form" method="POST">                    
                   <fieldset>                   
-                  <div class="fright">                       
-                     <label> Search</label>                    
-                     <span>
-                     <input type="text" />
-                     </span><a href="" onclick="document.getElementById('search-form').submit()"><img src="img/button.gif" alt="" /></a></div>
+                  <div class="fright">  
+                      <table><tr><td>
+                        <input style="width:150px;height:20px;border:1px yellowgreen solid;border-radius:2px;" type="text" name="tagname"/></td>            
+                     <td width="%"><input onmouseover="this.style.backgroundColor='#f2f3f3';" onmouseout="this.style.backgroundColor='#2e2e2e';" type="submit" style="border-radius:2px;width:80px;height:24px;border:2px blue none;background-color:#2e2e2e;color:yellowgreen;font-size:15px;cursor:pointer;" value="Search" name="search" /></td></tr></table>
+                    <!-- </span><a href="ShowTagSearchPicturesServlet" onclick="document.getElementById('search-form').submit()"><img src="img/button.gif" alt="" /></a>--></div>
                   </fieldset>
-               </form>                          
+               </form>       
            </div> 
              <br>
-             <div style="text-align:center;">
-             <input onmouseover="this.style.backgroundColor='#f2f3f3';" onmouseout="this.style.backgroundColor='#2e2e2e';" type="submit" style="width:80px;height:30px;border:2px blue none;background-color:#2e2e2e;color:yellowgreen;font-weight:bold;font-size:15px;cursor:pointer;" value="Subscribe" name="subscribe" onclick="javascript:checkSubmit(document.form2);return false;"/>
+             <div style="text-align:center;">              
+                 <% String check = (String)session.getAttribute("check");%>
+                     <%if(check == "subscribed"){%>
+                         <form name="check" action="SubscribeServlet" method="POST">
+                             <input onmouseover="this.style.backgroundColor='#2e2e2e';" onmouseout="this.style.backgroundColor='#90EE90';" type="submit" style="border-radius:2px;width:100px;height:30px;border:2px blue none;background-color:#90EE90;font-size:15px;cursor:pointer;" value="UnSubscribe" name="check" />
+                         </form>
+                     <%}%>
+                  
+                     <%if(check == "unsubscribed"){%>
+                         <form name="check" action="SubscribeServlet" method="POST">
+                             <input onmouseover="this.style.backgroundColor='#2e2e2e';" onmouseout="this.style.backgroundColor='#90EE90';" type="submit" style="border-radius:2px;width:100px;height:30px;border:2px blue none;background-color:#90EE90;font-size:15px;cursor:pointer;" value="Subscribe" name="check" />
+                         </form>
+                     <%}%>   
+                        
+                    
              </div>
              <br>
          </div>    
          </div>      
-       <!--<div class="clearfix"></div><!-- 清除浮动 -->
-<!-- wrap -->
-<!--<div class="wrap">-->
-<!-- Login -->
-<!--<div class="Login">-->
-    <!--<div class="clearfix">-->
 </div>
 </div>
     <div class="box">
 	<ul>
-        <li><img src="images/hua_8.jpg.680.510.jpg" /></li>
-        <li><img src="images/_2.jpg.680.510.jpg" /></li>
-        <li><img src="images/_1.jpg.680.510.jpg" /></li>
-        <li><img src="images/1_030ZTF23528.jpg" /></li>
-
-        
+            <%
+            ArrayList<String> URLArray = (ArrayList<String>)session.getAttribute("URLArray");
+            if(URLArray != null){
+                for(String url: URLArray){
+                    URL photourl=new URL(url);%>
+                    <li><img src="<%=photourl%>" /></li>
+            <%}
+            }
+            else {%>
+                    <div style="font-color:red"> No related pictures related to <%=request.getParameter("tagname")%></div>
+            <%}%>
     </ul>
 </div>
 <div class="clearfix"></div>
-<div class="wrap">
-   <div><br>    
-   </div>   </div>
-<div style='width:950px; height: 25px; line-height: 22px; margin-top: 20px; margin-left: 220px; background-color: #f2f3f3; text-align: center'>
-<a href="usermain.jsp"><font size='1'>Share Our Beautiful Memories in </font><font color="yellowgreen" size='1'>Photo</font></font><font size='1'>trest @ECE658 Course Group Team #1</font></a>
-</div>
+<div class="wrap"></div>
+   <br>    
+   
 </body>
 </html>
 

@@ -14,6 +14,7 @@
 <link href="auto.css" rel="stylesheet" type="text/css" />
 <link href="style.css" rel="stylesheet" type="text/css" />
 <link href="layout.css" rel="stylesheet" type="text/css" />
+<link rel="shortcut icon" type="img/icon.jpeg" media="screen" />
 <title>Phototrest-Upload Pictures</title>
 <script type="text/javascript">
 	//faded
@@ -156,7 +157,7 @@ $(function(){
             </div>                
             <div class="row-2">
                <ul class="wrapper">
-                  <li class="m1"><a href="usermain.jsp">Front Page<span>Page d'accueil</span></a></li>
+                  <li class="m1"><a href="landing.jsp">Landing Page<span>Page d'accueil</span></a></li>
                   <li class="m3"><a href="#">News<span>Actualités</span></a></li>
                   <li class="m4"><a href="#">Entertainment<span>Divertissement</span></a></li>
                   <li class="m5"><a href="#">Scenery<span>Beauté</span></a></li>
@@ -166,15 +167,15 @@ $(function(){
             </div>
             <div class="row-3 wrapper">
                 <div class="fleft"><font color="#2e2e2e"><span>Upload</span></font><font color="yellowgreen">Hello,${FullName }</font></div>              
-               <form action="" id="search-form">                  
+                <form action="ShowTagSearchPicturesServlet" id="search-form" method="POST">                    
                   <fieldset>                   
-                  <div class="fright">                       
-                     <label> Search</label>                    
-                     <span>
-                     <input type="text" />
-                     </span><a href="showsearchpictures.jsp" onclick="document.getElementById('search-form').submit()"><img src="img/button.gif" alt="" /></a></div>
+                  <div class="fright">  
+                      <table><tr><td>
+                        <input style="width:150px;height:20px;border:1px yellowgreen solid;border-radius:2px;" type="text" name="tagname"/></td>            
+                     <td width="%"><input onmouseover="this.style.backgroundColor='#f2f3f3';" onmouseout="this.style.backgroundColor='#2e2e2e';" type="submit" style="border-radius:2px;width:80px;height:24px;border:2px blue none;background-color:#2e2e2e;color:yellowgreen;font-size:15px;cursor:pointer;" value="Search" name="search" /></td></tr></table>
+                    <!-- </span><a href="ShowTagSearchPicturesServlet" onclick="document.getElementById('search-form').submit()"><img src="img/button.gif" alt="" /></a>--></div>
                   </fieldset>
-               </form>                          
+               </form>                         
             </div>
          </div>
       </div>

@@ -21,7 +21,7 @@ html[xmlns] .clr{display:block;}
 .main_right ul{width:730px;}
 .main_right ul li{float:left;width:234px;height:180px;text-align:center;font-size:14px;font-weight:bold;line-height:24px;cursor:pointer;margin-bottom:20px;}
 .main_right ul li a{color:#84878C;float:left;}
-.main_right ul li img{border:1px solid #ccc;background:#FFF;padding:5px;display:block;max-height: 200px;max-width: 200px;}
+.main_right ul li img{background:#FFF;padding:5px;display:block;max-height: 200px;max-width: 200px;}
 .main_right ul li span{display:block;font-weight:200;color:#84878C;}
 .main_right ul li.movie_scroll_hov img{border:1px solid #779e00;}
 .main_right ul li.movie_scroll_hov a{color:#779e00;}
