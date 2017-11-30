@@ -87,7 +87,7 @@
             <div class="inmain clr">
                 <div class="main_left">
                     <ul>
-                        <li class="rem_left1" rel="uploaded">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Uploaded Photos</li>
+                        <li rel="uploaded">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Uploaded Photos</li>
                             <%
                                 Map<String, List<PhotoWrapper>> subscribed = (Map<String, List<PhotoWrapper>>) request.getSession().getAttribute("subscribed");
                                 Set<String> tags = subscribed.keySet();
@@ -96,41 +96,23 @@
                         <li rel=<%= tag%> >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  →  <%= tag%></li> <%
                                 }
                             }%>
-
-                        <!--<li rel="technology">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Love Technology</li>
-                        <li rel="tools">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Love Tools</li>
-                        <li rel="movies">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Love Movies</li>
-                        <li rel="music">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Love Music</li>
-                        <li rel="game">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Love Game</li>
-                        <li rel="fiction">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Love Fiction</li>
-                        <li rel="other">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ Other</li>-->
                     </ul>
                 </div>
                 <div class="main_right">
                     <ul>
                         <%
                             for (PhotoWrapper wrapper : (List<PhotoWrapper>) request.getSession().getAttribute("uploaded")) {
-                        %><li rel="uploaded"><a href="#"><img src=<%= wrapper.url%> /> &nbsp;&nbsp;</a><span><a class="btn btn-primary delete" href=<%= "/delete?s3Key=" + wrapper.s3Key%>>Delete</a></span></li><%
+                        %><li rel="uploaded"><a href="#"><img src=<%= wrapper.url%> /> &nbsp;&nbsp;</a></li><%
                             }
                                 %>
                                 <%
                                     for (String tag : tags) {
                                         for (PhotoWrapper wrapper : subscribed.get(tag)) {
-                                %><li rel=<%= tag%>><a href="#"><img src=<%= wrapper.url%> /> &nbsp;&nbsp;</a><span><a class="btn btn-primary delete" href=<%= "delete?s3Key=" + wrapper.s3Key%>>Delete</a></span></li><%
+                                %><li rel=<%= tag%>><a href="#"><img src=<%= wrapper.url%> /> &nbsp;&nbsp;</a></li><%
                                         }
                                     }
                                 %>
-                        <!--
-                                                <li rel="technology"><a href="#"><img src="images/port2.jpg" />#tag1</a></li>
-                                                <li rel="other"><a href="#"><img src="images/port3.jpg" />#tag1</a></li>
-                                                <li rel="tools"><a href="#"><img src="images/port4.jpg" />#tag1</a></li>
-                                                <li rel="fiction"><a href="#"><img src="images/port4.jpg"/>#tag2</a></li>
-                                                <li rel="music"><a href="#"><img src="images/port5.jpg" />#tag2</a></li>
-                                                <li rel="game"><a href="#"><img src="images/port6.jpg" />#tag2</a></li>
-                                                <li rel="tools"><a href="#"><img src="images/port7.jpg" />#tag2</a></li>
-                                                <li rel="music"><a href="#"><img src="images/port8.jpg" />#tag3</a></li>
-                                                <li rel="movies"><a href="#"><img src="images/port9.jpg" />#tag3</a></li>
-                                                <li rel="fiction"><a href="#"><img src="images/port4.jpg" />#tag3</a></li>-->
+
                     </ul>
                 </div>
             </div>

@@ -40,6 +40,15 @@ public class SubscriptionService {
         return false;
     }
 
+    public boolean isUserSubscribed(String tagName, String username) {
+        Tag tag = tagFacade.retrieveTagByName(tagName);
+        User user = userFacade.retrieveUserByUserName(username);
+        if (user == null || tag == null) {
+            return false;
+        }
+        return user.getSubscribedTags().contains(tag);
+    }
+
     public boolean unsubscribeFromTag(String username, String tagName) {
         // remove tag from user's subscriptions in database
         Tag tag = tagFacade.retrieveTagByName(tagName);
