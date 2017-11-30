@@ -65,11 +65,15 @@ public class Tag implements Serializable {
     }
 
     public void addSubscribedUser(User user) {
-        this.subscribedUsers.add(user);
+        if (!subscribedUsers.contains(user)) {
+            this.subscribedUsers.add(user);
+        }
     }
 
     public void removeSubscribedUser(User user) {
-        this.subscribedUsers.remove(user);
+        if (subscribedUsers.contains(user)) {
+            this.subscribedUsers.remove(user);
+        }
     }
 
     public List<Photo> getPhotosUnderThisTag() {
@@ -81,11 +85,15 @@ public class Tag implements Serializable {
     }
 
     public void addPhotoUnderThisTag(Photo photo) {
-        this.photosUnderThisTag.add(photo);
+        if (!photosUnderThisTag.contains(photo)) {
+            this.photosUnderThisTag.add(photo);
+        }
     }
 
     public void removePhotoUnderThisTag(Photo photo) {
-        this.photosUnderThisTag.remove(photo);
+        if (photosUnderThisTag.contains(photo)) {
+            this.photosUnderThisTag.remove(photo);
+        }
     }
 
     @Override

@@ -143,11 +143,15 @@ public class User implements Serializable {
     }
 
     public void addSubscribedTag(Tag tag) {
-        this.subscribedTags.add(tag);
+        if (!subscribedTags.contains(tag)) {
+            this.subscribedTags.add(tag);
+        }
     }
 
     public void removeSubscribedTag(Tag tag) {
-        this.subscribedTags.remove(tag);
+        if (subscribedTags.contains(tag)) {
+            this.subscribedTags.remove(tag);
+        }
     }
 
     public List<Photo> getUploadedPhotos() {
@@ -159,11 +163,15 @@ public class User implements Serializable {
     }
 
     public void addUploadedPhoto(Photo photo) {
-        this.uploadedPhotos.add(photo);
+        if (!uploadedPhotos.contains(photo)) {
+            this.uploadedPhotos.add(photo);
+        }
     }
 
     public void removeUploadedPhoto(Photo photo) {
-        this.uploadedPhotos.remove(photo);
+        if (uploadedPhotos.contains(photo)) {
+            this.uploadedPhotos.remove(photo);
+        }
     }
 
     public boolean isIsAdmin() {
